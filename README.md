@@ -1,6 +1,6 @@
 # Example Anfisa Docker container for OpenShift.
 
-In this example we deploy Anfisa and Anfisato OpenShift environment.
+In this example we deploy Anfisa and Anfisa Annotator OpenShift environment.
 
 Optional components (if this services already deployed):
 

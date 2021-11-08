@@ -10,9 +10,8 @@ MongoDB
 
 PostgreSQL
 
-If this components (above) is not deployed, see ./infra/README.md
 
-## How to deploy Anfisa to OpenShift via BuildConfig
+## How to deploy Anfisa to OpenShift via HELM 3
 
 1. Login to your OpenShift Cluster
 
@@ -22,41 +21,19 @@ If this components (above) is not deployed, see ./infra/README.md
 
 4. Clone this repo
 
-`git clone https://bitbucket.org/artemsveshnikov/anfisa_openshift/`
+`git clone https://github.com/ForomePlatform/anfisa-openshift.git`
 
-5. Create Build Config in OpenShift Cluster
+5. Go to directory with helm chart
 
-`oc create -f build_config.yaml`
+`cd anfisa-chart/`
 
-6. Create Image Stream in OpenShift Cluster
+7.  Start deploy
 
-`oc create -f images_stream.yaml`
+`helm install anfisa -n "PROJECT_NAME" --debug  .`
 
-7. Go to directory with repository and start building (in this step image will be built and pushed to internal container registry)
+8. Go to OpenShift platform console and start building (in this step image will be built and pushed to internal container registry)
 
-`oc start-build anfisa-v6`
-
-8. Create ConfigMap
-
-`oc create -f configmap.yaml`
-
-9. Create Deployment
-
-`oc create -f deploy_config.yaml`
-
-`oc create -f deploy.yaml`
-
-10. Create PVC
-
-`oc create -f pvc.yaml`
-
-11. Create ClusterIP
-
-`oc create -f ip.yaml`
-
-12. Create Ingress Route
-
-`oc create -f route.yml`
+Tab "BUILDS" -> subtab "buildConfigs" -> options -> "start build"
 
 ## How to use
 

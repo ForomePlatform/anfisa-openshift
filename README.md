@@ -1,6 +1,6 @@
 # Example Anfisa Docker container for OpenShift.
 
-In this example we deploy Anfisa to OpenShift environment.
+In this example we deploy Anfisa and Anfisato OpenShift environment.
 
 Optional components (if this services already deployed):
 
@@ -10,6 +10,7 @@ MongoDB
 
 PostgreSQL
 
+MySQL
 
 ## How to deploy Anfisa to OpenShift via HELM 3
 

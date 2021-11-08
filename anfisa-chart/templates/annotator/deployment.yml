@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.annotator.name }}
+  labels:
+    app: {{ .Values.annotator.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.annotator.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.annotator.name }}
+    spec:
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 999
+        # fsUser: 999
+        runAsUser: 999
+      initContainers:
+        - name: anfisavepconfig-{{ .Values.annotator.project }}
+          image: "{{ .Values.annotator.output_registry }}/{{ .Values.annotator.project }}/{{ .Values.annotator.name }}"
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          tty: true
+          stdin: true
+          command:
+            - "entrypoint.sh"
+          args:
+            - "configurevep"
+          # serviceAccount: default
+          volumeMounts:
+          - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+            mountPath: /opt/vep/.vep/
+      containers:
+        - name: "anfisaannotation-{{ .Values.annotator.project }}"
+          image: "{{ .Values.annotator.output_registry }}/{{ .Values.annotator.project }}/{{ .Values.annotator.name }}"
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          tty: true
+          stdin: true
+          command:
+            - "entrypoint.sh"
+          args:
+            - "astorage"
+
+          volumeMounts:
+          - name: {{ .Values.annotator.name }}
+            mountPath: /data/project/AStorage/astorage.cfg
+            subPath: astorage.cfg
+          - name: {{ .Values.annotator.name }}
+            mountPath: /data/project/AStorage/config.json
+            subPath: config.json
+          - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+            mountPath: /opt/vep/.vep/
+          - name: anfisa-annotation-data-{{ .Values.annotator.project }}
+            mountPath: /data/forannotation/
+          - name: anfisa-annotation-db-{{ .Values.annotator.project }}
+            mountPath: /db/
+      volumes:
+      - name: {{ .Values.annotator.name }}
+        configMap:
+          name: {{ .Values.annotator.name }}
+      - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+        persistentVolumeClaim:
+          claimName: asset-foromeannotation-pvc-{{ .Values.annotator.project }}
+      - name: anfisa-annotation-data-{{ .Values.annotator.project }}
+        persistentVolumeClaim:
+          claimName: asset-foromeannotationdata-pvc-{{ .Values.annotator.project }}
+      - name: anfisa-annotation-db-{{ .Values.annotator.project }}
+        persistentVolumeClaim:
+          claimName: asset-foromeannotationdb-pvc-{{ .Values.annotator.project }}
+
+      terminationGracePeriodSeconds: 5

@@ -2,7 +2,7 @@
 
 
 # ------------------------------------------------------------------------------
-# Anfisa:
+# Anfisa-back:
 # ------------------------------------------------------------------------------
 
 anfisa:
@@ -18,6 +18,14 @@ anfisa:
     workdir_volume: anfisa-workdir
     workdir_claim_name: anfisa-workdir-claim
 
+# ------------------------------------------------------------------------------
+# anfisa_front:
+# 
+anfisa_front:
+  name: anfisa-test-front
+  git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client.git
+  git_branch: main
+  
 # ------------------------------------------------------------------------------
 # Annotator:
 # ------------------------------------------------------------------------------

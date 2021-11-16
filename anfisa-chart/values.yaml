@@ -8,8 +8,8 @@
 anfisa:
   project: test
   name: anfisa-test
-  git_uri: https://github.com/ForomePlatform/anfisa
-  git_branch: test
+  git_uri: https://github.com/ForomePlatform/anfisa-openshift.git
+  git_branch: master
   output_registry: image-registry.openshift-image-registry.svc:5000
   anfisa_volumes:
     data_volume: anfisa-data

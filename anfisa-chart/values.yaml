@@ -1,5 +1,13 @@
 # Default values
 
+# ------------------------------------------------------------------------------
+# Anfisa-ingress:
+# ------------------------------------------------------------------------------
+ingress:
+  name: anfisa-ingress
+  host: ui.asset-forome-dev-162fa491ef10b14d22843708d94ef0ba-0000.us-south.containers.appdomain.cloud
+  certificate: asset-forome-dev-162fa491ef10b14d22843708d94ef0ba-0000 
+  #oc get secrets -n openshift-ingress - view secrets with TLC-certificates
 
 # ------------------------------------------------------------------------------
 # Anfisa-back:

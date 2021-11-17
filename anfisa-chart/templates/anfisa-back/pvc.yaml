@@ -13,6 +13,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 15Gi
+      storage: 200Gi
   volumeMode: Filesystem
   storageClassName: ibmc-vpc-block-10iops-tier

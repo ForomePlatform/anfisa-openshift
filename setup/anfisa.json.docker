@@ -44,14 +44,14 @@
   "doc-pygments-css": "${HOME}/int_ui/files/py_pygments.css",
   "druid": {
       "vault-prefix": "demo_v6",
-      "index": "http://druid-coordinator:8081/druid/indexer/v1/task",
-      "query": "http://druid-router:80/druid/v2",
-      "sql":   "http://druid-router:80/druid/v2/sql",
-      "coord": "http://druid-coordinator:8081/druid/coordinator/v1",
+      "index": "http://anfisa-druid-coordinator:8081/druid/indexer/v1/task",
+      "query": "http://router:80/druid/v2",
+      "sql":   "http://router:80/druid/v2/sql",
+      "coord": "http://anfisa-druid-coordinator:8081/druid/coordinator/v1",
       "copydir": "/data/"
   },
  
-  "mongo-host": "druid-mongodb",
+  "mongo-host": "anfisa-mongodb",
   "mongo-port": 27017,
   "mongo-db": "Anfisa1",
   "logging": {

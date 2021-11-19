@@ -1,32 +1,32 @@
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
+        listen 80 default_server;
+        listen [::]:80 default_server;
 
-	index index.html index.htm index.nginx-debian.html;
+        index index.html index.htm index.nginx-debian.html;
 
-	server_name _;
+        server_name _;
 
-	location /anfisa/app/ {
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying a 404.
-		#try_files $uri $uri/ =404;		
-		#proxy_pass http://localhost:3041;
-		#proxy_read_timeout 900;
-		#proxy_redirect off;
-		uwsgi_read_timeout 999;
-		include uwsgi_params;
-	        uwsgi_pass 127.0.0.1:3041;
-		#uwsgi_pass unix:///root/uwsgi.sock;
-	}
-	
-	location ~ /anfisa/app/ui/images {
-		rewrite ^/anfisa/app/ui/images/(.*)$ /$1 break;
-		root /anfisa/anfisa/int_ui/images;
-	}
+        location /anfisa/app/ {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                #try_files $uri $uri/ =404;             
+                #proxy_pass http://localhost:3041;
+                #proxy_read_timeout 900;
+                #proxy_redirect off;
+                uwsgi_read_timeout 999;
+                include uwsgi_params;
+                uwsgi_pass 127.0.0.1:3041;
+                #uwsgi_pass unix:///root/uwsgi.sock;
+        }
+        
+        location ~ /anfisa/app/ui/images {
+                rewrite ^/anfisa/app/ui/images/(.*)$ /$1 break;
+                root /anfisa/anfisa/int_ui/images;
+        }
 
-	location ~ /anfisa/app/ui {
-		rewrite ^/anfisa/app/ui/(.*)$ /$1 break;
-		root /anfisa/a-setup/ui;
-	}
+        location ~ /anfisa/app/ui {
+                rewrite ^/anfisa/app/ui/(.*)$ /$1 break;
+                root /anfisa/a-setup/ui;
+        }
 
 }

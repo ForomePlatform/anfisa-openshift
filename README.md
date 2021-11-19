@@ -1,59 +1,158 @@
-# Example Anfisa Docker container for OpenShift.
+# Anfisa
 
-In this example we deploy Anfisa and Anfisa Annotator OpenShift environment.
+<!-- toc -->
 
-Optional components (if this services already deployed):
+- [Overview](#overview)
+- [Online Development Documentation](#online-development-documentation)
+- [Installation](#installation)
+  * [Select branch or release:](#select-branch-or-release)
+  * [Installation instructions](#installation-instructions)
+    + [Installing via Docker](#installing-via-docker)
+    + [Installing without Docker](#installing-without-docker)
+  * [Ingesting demo whole genome](#ingesting-demo-whole-genome)
+- [Public Demo](#public-demo)
 
-Apache Druid
+<!-- tocstop -->
 
-MongoDB
+## Overview
 
-PostgreSQL
+Anfisa is a Variant Analysis and Curation Tool. Its purpose is to 
+bring together Genetic Research and Clinical settings and provide a 
+medical genticist with access to research Genome.
 
-MySQL
+See more about the goal of the project at https://forome.org/  
 
-## How to deploy Anfisa to OpenShift via HELM 3
+A detailed [Setup and Administration Guide](https://github.com/ForomePlatform/anfisa/blob/master/Anfisa%20v.0.5%20Setup%20%26%20Administration%20Reference.pdf) is included with the distribution. 
 
-1. Login to your OpenShift Cluster
+## Online Development Documentation
 
-2. Go to your project
+- Installation&Administration Documentation
 
-`oc project PROJECT_NAME`
+https://foromeplatform.github.io/documentation/anfisa-dev.v0.6/
 
-4. Clone this repo
+- User Documentation
 
-`git clone https://github.com/ForomePlatform/anfisa-openshift.git`
+https://foromeplatform.github.io/documentation/anfisa-user.v0.6/
 
-5. Go to directory with helm chart
+##  Installation
 
-`cd anfisa-chart/`
+### Select branch or release:
+This is a master branch that from time to time can be unstable or untested.
+If you would like to try Anfisa, we strongly recommend installing it from one 
+of the released tags 
 
-7.  Start deploy
 
-`helm install anfisa -n "PROJECT_NAME" --debug  .`
+### Installation instructions
 
-8. Go to OpenShift platform console and start building (in this step image will be built and pushed to internal container registry)
+To install Anfisa on a local Linux or MacOS system:
 
-Tab "BUILDS" -> subtab "buildConfigs" -> options -> "start build"
+1. Clone the repository on your system. We suggest cloning one of 
+the tagged (released) version as the master branch is undergoing 
+continues development.
 
-## How to use
+2. Change into anfisa directory, e.g.:
 
-### Add dataset WS
+`cd anfisa`
 
-1. Put your dataset to POD_NAME:/anfisa/a-setup/data/DATASET_NAME
+3. Decide what directory will be a working directory for Anfisa
 
-2. Enter command:
+4. Decide which of the following installation paths you prefer:
+- Use a Docker container. This method will also install Druid and 
+other dependencies. However, Druid requires at least 8G of memory, 
+if your box does not have this amount of RAM, you should avoid running 
+Druid or adjust its settings. Druid can also be run on a separate box. 
+- Install all components in your local system. This is only recommended 
+if you will contributing to Anfisa development or customizing its code. 
 
-`oc exec -it POD_NAME -- bash -c 'PYTHONPATH=/anfisa/anfisa/ python3 -m app.storage -c /anfisa/anfisa.json -m create -f -k ws -i /anfisa/a-setup/data/DATASET_NAME/inventory_file.cfg DATASET_VISIBLE_NAME'`
+#### Installing via Docker
 
-3. If not inventory file:
+**Attention: Docker installation also installs Druid. Druid is required for
+handling whole exome/genome datasets, but it takes a lot of memory. 
+Minimum required memory is 8G and swap should be enabled.** 
 
-`oc exec -it POD_NAME -- bash -c 'PYTHONPATH=/anfisa/anfisa/ python3 -m app.storage -c /anfisa/anfisa.json -m create -f -k ws -s /anfisa/a-setup/data/DATASET_NAME/source_file.json.gz DATASET_VISIBLE_NAME'`
+**If you have 4G of memory, first adjust Druid parameters in environment.template file.**
 
-### Add dataset XL
+**If you have less than 4G, you can install demo version without Druid. 
+Update docker-compose.yml.template**
 
-1. Put your dataset to POD_NAME:/anfisa/a-setup/data/DATASET_NAME
+1. Run 
 
-2. Enter command:
+`deploy.sh --workdir=<Absolute path to the chosen working directory>`
 
-`oc exec -it POD_NAME -- bash -c PYTHONPATH=/anfisa/anfisa/ python3 -m app.storage -c /anfisa/anfisa.json -m create -f -k xl -i /anfisa/a-setup/data/DATASET_NAME/inventory_file.cfg XL_DATASET_VISIBLE_NAME'`
+2. Point your browser to http://localhost:9010/anfisa/app/dir 
+
+3. [Optionally] Adjust setting for your webserver to serve Anfisa. 
+For nginx add the following location block:
+
+``` 
+location /anfisa {
+	proxy_pass http://127.0.0.1:9010/anfisa;
+}
+```
+
+4. Download [sample whole genome dataset](https://forome-project-bucket.s3.eu-central-1.amazonaws.com/v6/pgp3140_wgs_nist-v4.2.tgz) 
+and [ingest it](#ingesting-demo-whole-genome). Will require around 4 hours
+
+#### Installing without Docker
+
+1. [Optionally] Create virtual environment (See https://docs.python.org/3/library/venv.html) 
+and activate it. We will be installing a lot of dependent packages, 
+make sure you have permission to do it. A sample command is:
+
+`python3 -m venv .anfisa && source .anfisa/bin/activate`
+
+2. Make sure you have MongoDB installed. If its endpoint 
+is not localhost:27017, after the installation you will need to edit anfisa.json
+
+3. Make sure that sphinx is installed. On Ubuntu the instllation command is:
+
+`sudo apt-get install python3-sphinx`
+
+4. Run deploy script (will use pip to install requirements):
+
+`. deploy_local.sh`
+
+First, the script will ask for an installation directory. 
+By default it would install in the same directory 
+where you have cloned the code, but you can 
+change it to any other directory. 
+Once installation directory is confirmed, the script 
+will configure Anfisa for your local system.
+
+When the script has finished, it will display 
+the command to start Anfisa server. 
+
+When the system is running you can access 
+the web interface by the url: http://localhost:8190 
+
+The port is configurable in your configuration file.
+                                                            
+
+###  Ingesting demo whole genome
+> You will need approximately 25G of space available to 
+> experiment with a whole genome 
+
+* First, download 
+  [prepared dataset](https://forome-project-bucket.s3.eu-central-1.amazonaws.com/v6/pgp3140_wgs_nist-v4.2.tgz)
+* Unpack the content into some directory (e.g. directory `data` 
+  under your work directory)
+* Run Anfisa ingestion process
+                                     
+Here are sample commands that can be executed:
+
+    curl -L -O https://forome-project-bucket.s3.eu-central-1.amazonaws.com/v6/pgp3140_wgs_nist-v4.2.tgz
+    docker cp pgp3140_wgs_nist-v4.2.tgz anfisa6:/anfisa/a-setup/data/examples/
+    docker exec -it anfisa6 sh -c 'cd /anfisa/a-setup/data/examples && tar -zxvf pgp3140_wgs_nist-v4.2.tgz'
+    docker exec -it anfisa6 sh -c 'PYTHONPATH=/anfisa/anfisa/ python3 -u -m app.storage -c /anfisa/anfisa.json -m create --reportlines 1000 -f -k xl -i /anfisa/a-setup/data/examples/pgp3140_wgs_nist-v4.2/pgp3140_wgs_nist-v4.2.cfg XL_PGP3140_NIST_V42'
+            
+
+## Public Demo 
+
+Also available is a demo of Anfisa based on a high 
+confidence small variants callset v 4.2 created by NIST 
+by integrating results of sequencing, alignment and 
+variant calling from different sources; including 
+both short and long read techniques.  
+
+
+The demo is available at: http://demo.forome.org

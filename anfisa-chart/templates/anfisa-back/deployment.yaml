@@ -21,7 +21,6 @@ spec:
       securityContext:
         fsGroup: 1000
         runAsUser: 0
-
       containers: 
         - name: {{ .Values.anfisa.name }}
           ports:
@@ -46,15 +45,15 @@ spec:
 #          args:
 #            - "/usr/bin/entrypoint.sh"        
           volumeMounts:
-          - name: {{ .Values.anfisa.anfisa_volumes.data_volume }}
-            mountPath: /data/
+          - name: data-anfisa
+            mountPath: /datatest/
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
      
       volumes:
-      - name: {{ .Values.anfisa.anfisa_volumes.data_volume }}
+      - name: data-anfisa
         persistentVolumeClaim:
-          claimName: {{ .Values.anfisa.anfisa_volumes.data_claim_name }}
+          claimName: s3pvc
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
         persistentVolumeClaim:
           claimName: {{ .Values.anfisa.anfisa_volumes.workdir_claim_name }}

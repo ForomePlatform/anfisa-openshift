@@ -1,6 +1,19 @@
 # Default values
 
 # ------------------------------------------------------------------------------
+# S3PVC-CLAIM:
+#persistenceVolumeClaim for anfisa and druid-components
+# ------------------------------------------------------------------------------
+
+volumeclaim :
+  bucket: anfisa-druid
+  secret: cos-write-access
+  # claim: s3pvc ----> #hardcode in PVC
+  # access_mode: ReadWriteOnce ----> #hardcode in PVC
+  # size: "1000Gi" #hardcode
+  # storageclass: ibmc-s3fs-standard-regional ----> #hardcode in PVC
+
+# ------------------------------------------------------------------------------
 # Anfisa-ingress:
 # ------------------------------------------------------------------------------
 ingress:
@@ -20,9 +33,6 @@ anfisa:
   git_branch: master
   output_registry: image-registry.openshift-image-registry.svc:5000
   anfisa_volumes:
-    data_volume: anfisa-data
-    data_claim_name: anfisa-data-claim
-
     workdir_volume: anfisa-workdir
     workdir_claim_name: anfisa-workdir-claim
 

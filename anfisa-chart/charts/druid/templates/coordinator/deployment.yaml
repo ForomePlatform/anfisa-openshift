@@ -30,6 +30,9 @@ spec:
       - name: {{ include "druid.coordinator.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: data-druid
+            mountPath: /datatest/
         args: [ "coordinator" ]
         env:
         {{- if .Values.zookeeper.enabled }}
@@ -80,6 +83,10 @@ spec:
             port: {{ .Values.coordinator.port }}
         resources:
 {{ toYaml .Values.coordinator.resources | indent 12 }}
+      volumes:
+      - name: data-druid
+        persistentVolumeClaim:
+          claimName: s3pvc
 
       {{- if .Values.monitoring.enabled }}
       - name: druid-metrics-exporter

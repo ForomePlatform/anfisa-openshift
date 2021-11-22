@@ -47,17 +47,6 @@ env:
   druid_indexer_fork_property_druid_processing_buffer_sizeBytes: "10000000"
   druid_indexer_fork_property_druid_processing_numThreads: "1"
 
-#persistenceVolumeClaim for druid-components
-volumeclaim :
-  # claim: s3pvc ----> #hardcode in PVC
-  bucket: anfisa-druid
-  secret: cos-write-access
-  # access_mode: ReadWriteOnce ----> #hardcode in PVC
-  # size: "1000Gi" #hardcode
-  # storageclass: ibmc-s3fs-standard-regional ----> #hardcode in PVC
-
-
-
 router:
   managementProxy:
     enabled: true

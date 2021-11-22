@@ -49,6 +49,9 @@ spec:
             mountPath: /datatest/
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
+          - name: anfisa-config
+            mountPath: /anfisa/anfisa.json
+            subPath: anfisa.json
      
       volumes:
       - name: data-anfisa
@@ -57,5 +60,9 @@ spec:
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
         persistentVolumeClaim:
           claimName: {{ .Values.anfisa.anfisa_volumes.workdir_claim_name }}
+      - name: anfisa-config
+        configMap:
+          name: {{ .Values.anfisa.name }}
+          defaultMode: 420
 
       terminationGracePeriodSeconds: 5

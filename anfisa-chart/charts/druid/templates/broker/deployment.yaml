@@ -57,6 +57,8 @@ spec:
           {{- end }}
           - name: druid_extensions_loadList
             value: {{ .Values.extensions.loadList | toJson | quote }}
+
+            
           {{- if .Values.monitoring.enabled }}
           - name: druid_monitoring_monitors
             value: '["org.apache.druid.server.metrics.QueryCountStatsMonitor"]'

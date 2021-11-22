@@ -29,12 +29,12 @@ spec:
               protocol: TCP
           env:
             - name: ANFISA_COORD_HOST
-              value: druid-coordinator
+              value: anfisa-druid-coordinator
             - name: ANFISA_ROUTER_HOST
-              value: druid-router
+              value: router
             - name: ANFISA_MONGO_HOST
-              value: druid-mongodb
-
+              value: anfisa-mongodb
+          ports:
           image: "{{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa.name }}"
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File

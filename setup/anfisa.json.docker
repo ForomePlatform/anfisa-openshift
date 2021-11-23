@@ -48,7 +48,7 @@
         "sql":   "http://router:8888/druid/v2/sql",
         "coord": "http://anfisa-druid-coordinator:8081/druid/coordinator/v1",
         "-scp": {
-            "dir": "/data/upload/",
+            "dir": "/datatest/upload/",
             "key": "---",
             "host": "---",
             "exe": "/usr/bin/scp"}

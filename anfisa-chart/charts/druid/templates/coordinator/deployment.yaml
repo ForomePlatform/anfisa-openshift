@@ -32,7 +32,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         volumeMounts:
           - name: data-druid
-            mountPath: /datatest/
+            mountPath: /datatest
         args: [ "coordinator" ]
         env:
         {{- if .Values.zookeeper.enabled }}

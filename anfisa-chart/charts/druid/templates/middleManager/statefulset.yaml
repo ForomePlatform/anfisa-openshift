@@ -123,7 +123,7 @@ spec:
         - name: data
           mountPath: /opt/druid/var
         - name: data2
-          mountPath: /data
+          mountPath: /datatest
 
       {{- if .Values.monitoring.enabled }}
       - name: druid-metrics-exporter
@@ -149,7 +149,10 @@ spec:
         emptyDir: {}
   {{- end }}
       securityContext:
-          fsGroup: 1000
+          fsGroup: 0
+          runAsUser: 0
+          runAsGroup: 0
+
   updateStrategy:
     type: {{ .Values.middleManager.updateStrategy.type }}
   {{- if .Values.middleManager.persistence.enabled }}

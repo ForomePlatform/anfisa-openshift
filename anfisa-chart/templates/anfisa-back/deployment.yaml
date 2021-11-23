@@ -19,8 +19,9 @@ spec:
     spec:
       serviceAccountName: default
       securityContext:
-        fsGroup: 1000
+        fsGroup: 0
         runAsUser: 0
+        runAsGroup: 0
       containers: 
         - name: {{ .Values.anfisa.name }}
           ports:

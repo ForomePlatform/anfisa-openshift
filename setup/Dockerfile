@@ -1,6 +1,6 @@
 FROM python:3.7
 WORKDIR /anfisa
-RUN bash -c 'mkdir -p /anfisa/anfisa && mkdir -p /anfisa/a-setup/ && mkdir -p /data/ && mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui} && chmod 755 -R /anfisa/a-setup/{data,logs,vault,export/work,ui}'
+RUN bash -c 'mkdir -p /anfisa/anfisa && mkdir -p /anfisa/a-setup/ && mkdir -p /data/ && mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui} && chmod 00755 -R /anfisa/a-setup/{data,logs,vault,export/work,ui}'
 COPY . /anfisa/anfisa/
 RUN cd /anfisa/anfisa/setup/ && pip3 install -r requirements.txt && pip3 install supervisor && pip3 install -e git+https://github.com/ForomePlatform/forome_misc_tools.git#egg=forome-tools
 RUN cd /anfisa/anfisa/setup && mv anfisa.json.docker /anfisa/anfisa.json && cd /anfisa/anfisa/setup/ && mv entrypoint.sh /usr/bin/entrypoint.sh && chmod +x /usr/bin/entrypoint.sh

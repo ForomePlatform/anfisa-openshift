@@ -6,8 +6,6 @@ if [ ${COUNT_FILES} -le 2 ] ; then
     chmod -R 00755 /anfisa/a-setup/
 fi
 
-exec "$@"
-
 if [ ! -f /anfisa/a-setup/export/SEQaBOO_output_template_20190317.xlsx ]  ; then
   pushd /anfisa/a-setup/export
   curl -L -O https://www.dropbox.com/s/4dvunn3dusqc636/SEQaBOO_output_template_20190317.xlsx

@@ -1,8 +1,12 @@
 #!/bin/bash
 
-#for d in /anfisa/a-setup/{data,logs,vault,export/work,ui} ; do
-#    [ ! -d $d ] && mkdir -p $d
-#done
+export COUNT_FILES=$(ls -A /anfisa/a-setup/ | wc -l)
+if [ ${COUNT_FILES} -le 2 ] ; then
+    mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui}
+    chmod -R 00755 /anfisa/a-setup/
+fi
+
+exec "$@"
 
 if [ ! -f /anfisa/a-setup/export/SEQaBOO_output_template_20190317.xlsx ]  ; then
   pushd /anfisa/a-setup/export

@@ -31,7 +31,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         volumeMounts:
-          - name: data-druid
+          - name: data2
             mountPath: /datatest
         args: [ "coordinator" ]
         env:
@@ -84,7 +84,7 @@ spec:
         resources:
 {{ toYaml .Values.coordinator.resources | indent 12 }}
       volumes:
-      - name: data-druid
+      - name: data2
         persistentVolumeClaim:
           claimName: s3pvc
 

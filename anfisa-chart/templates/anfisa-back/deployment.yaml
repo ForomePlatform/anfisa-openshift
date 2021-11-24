@@ -46,7 +46,7 @@ spec:
 #          args:
 #            - "/usr/bin/entrypoint.sh"        
           volumeMounts:
-          - name: data-anfisa
+          - name: data2
             mountPath: /datatest/
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
@@ -55,7 +55,7 @@ spec:
             subPath: anfisa.json
      
       volumes:
-      - name: data-anfisa
+      - name: data2
         persistentVolumeClaim:
           claimName: s3pvc
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}

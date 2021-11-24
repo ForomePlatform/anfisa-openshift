@@ -47,7 +47,7 @@ spec:
 #            - "/usr/bin/entrypoint.sh"        
           volumeMounts:
           - name: data2
-            mountPath: /datatest/
+            mountPath: /datatest
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
           - name: anfisa-config

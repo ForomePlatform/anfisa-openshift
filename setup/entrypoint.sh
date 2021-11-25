@@ -1,10 +1,10 @@
 #!/bin/bash
 
-export COUNT_FILES=$(ls -A /anfisa/a-setup/ | wc -l)
-if [ ${COUNT_FILES} -le 2 ] ; then
-    mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui}
-    chmod -R 00755 /anfisa/a-setup/
-fi
+#export COUNT_FILES=$(ls -A /anfisa/a-setup/ | wc -l)
+#if [ ${COUNT_FILES} -le 2 ] ; then
+#    mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui}
+#    chmod -R 00755 /anfisa/a-setup/
+#fi
 
 if [ ! -f /anfisa/a-setup/export/SEQaBOO_output_template_20190317.xlsx ]  ; then
   pushd /anfisa/a-setup/export

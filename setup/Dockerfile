@@ -1,15 +1,15 @@
 FROM python:3.7
 WORKDIR /anfisa
 
-RUN mkdir /anfisa/anfisa \
-    && mkdir /anfisa/a-setup \
-    && mkdir /data \
-    && mkdir /anfisa/a-setup/data \
-    && mkdir /anfisa/a-setup/logs \
-    && mkdir /anfisa/a-setup/vault \
-    && mkdir /anfisa/a-setup/export \
-    && mkdir /anfisa/a-setup/export/work \
-    && mkdir /anfisa/a-setup/ui \
+RUN mkdir -p /anfisa/anfisa \
+    && mkdir -p /anfisa/a-setup \
+    && mkdir -p /data \
+    && mkdir -p /anfisa/a-setup/data \
+    && mkdir -p /anfisa/a-setup/logs \
+    && mkdir -p /anfisa/a-setup/vault \
+    && mkdir -p /anfisa/a-setup/export \
+    && mkdir -p /anfisa/a-setup/export/work \
+    && mkdir -p /anfisa/a-setup/ui \
 #    && chown -R app:app /app \
     && chmod -R 777 /anfisa/a-setup
     

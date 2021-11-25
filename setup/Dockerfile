@@ -13,7 +13,7 @@ RUN mkdir /anfisa/anfisa \
 #    && chown -R app:app /app \
     && chmod -R 777 /anfisa/a-setup
     
-RUN mkdir -p /anfisa/anfisa && mkdir -p /anfisa/a-setup/ && mkdir -p /data/ && mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui} && chmod -R 00755 /anfisa/a-setup/
+#RUN mkdir -p /anfisa/anfisa && mkdir -p /anfisa/a-setup/ && mkdir -p /data/ && mkdir -p /anfisa/a-setup/{data,logs,vault,export/work,ui} && chmod -R 00755 /anfisa/a-setup/
 COPY . /anfisa/anfisa/
 RUN cd /anfisa/anfisa/setup/ && pip3 install -r requirements.txt && pip3 install supervisor && pip3 install -e git+https://github.com/ForomePlatform/forome_misc_tools.git#egg=forome-tools
 RUN cd /anfisa/anfisa/setup && mv anfisa.json.docker /anfisa/anfisa.json && cd /anfisa/anfisa/setup/ && mv entrypoint.sh /usr/bin/entrypoint.sh && chmod +x /usr/bin/entrypoint.sh

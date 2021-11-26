@@ -58,7 +58,7 @@ data:
             "copydir": "/datatest/"
         },
         
-        "mongo-host": "druid-mongodb",
+        "mongo-host": "anfisa-mongodb",
         "mongo-port": 27017,
         "mongo-db": "Anfisa1",
         "logging": {

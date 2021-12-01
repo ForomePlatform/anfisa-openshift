@@ -32,7 +32,7 @@ spec:
             - "configurevep"
           # serviceAccount: default
           volumeMounts:
-          - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+          - name: anfisa-annotation-vep-cache
             mountPath: /opt/vep/.vep/
       containers:
         - name: "anfisaannotation-{{ .Values.annotator.project }}"
@@ -47,30 +47,30 @@ spec:
             - "astorage"
 
           volumeMounts:
-          - name: {{ .Values.annotator.name }}
+          - name: anfisa-annotation-configs
             mountPath: /data/project/AStorage/astorage.cfg
             subPath: astorage.cfg
-          - name: {{ .Values.annotator.name }}
+          - name: anfisa-annotation-configs
             mountPath: /data/project/AStorage/config.json
             subPath: config.json
-          - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+          - name: anfisa-annotation-vep-cache
             mountPath: /opt/vep/.vep/
-          - name: anfisa-annotation-data-{{ .Values.annotator.project }}
+          - name: anfisa-annotation-data
             mountPath: /data/forannotation/
-          - name: anfisa-annotation-db-{{ .Values.annotator.project }}
+          - name: anfisa-annotation-db
             mountPath: /db/
       volumes:
-      - name: {{ .Values.annotator.name }}
+      - name: anfisa-annotation-configs
         configMap:
           name: {{ .Values.annotator.name }}
-      - name: anfisa-annotation-vep-cache-{{ .Values.annotator.project }}
+      - name: anfisa-annotation-vep-cache
         persistentVolumeClaim:
-          claimName: asset-foromeannotation-pvc-{{ .Values.annotator.project }}
-      - name: anfisa-annotation-data-{{ .Values.annotator.project }}
+          claimName: annotation-pvc
+      - name: anfisa-annotation-data
         persistentVolumeClaim:
-          claimName: asset-foromeannotationdata-pvc-{{ .Values.annotator.project }}
-      - name: anfisa-annotation-db-{{ .Values.annotator.project }}
+          claimName: annotation-data-pvc
+      - name: anfisa-annotation-db
         persistentVolumeClaim:
-          claimName: asset-foromeannotationdb-pvc-{{ .Values.annotator.project }}
+          claimName: annotation-db-pvc
 
       terminationGracePeriodSeconds: 5

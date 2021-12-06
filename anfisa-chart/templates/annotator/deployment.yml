@@ -58,6 +58,8 @@ spec:
             mountPath: /data/forannotation/
           - name: anfisa-annotation-db
             mountPath: /db/
+          - name: anfisa-annotation-project
+            mountPath: /data/project/
       volumes:
       - name: anfisa-annotation-configs
         configMap:
@@ -71,5 +73,8 @@ spec:
       - name: anfisa-annotation-db
         persistentVolumeClaim:
           claimName: annotation-db-pvc
+      - name: anfisa-annotation-project
+        persistentVolumeClaim:
+          claimName: annotation-project-pvc
 
       terminationGracePeriodSeconds: 5

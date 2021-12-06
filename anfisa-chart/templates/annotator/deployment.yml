@@ -32,8 +32,8 @@ spec:
             - "configurevep"
           # serviceAccount: default
           volumeMounts:
-            - name: anfisa-annotation-vep-cache
-              mountPath: /opt/vep/.vep/
+          - name: anfisa-annotation-vep-cache
+            mountPath: /opt/vep/.vep/
       containers:
         - name: anfisa-annotation
           image: "{{ .Values.annotator.output_registry }}/{{ .Values.annotator.project }}/{{ .Values.annotator.name }}"
@@ -46,24 +46,20 @@ spec:
           args:
             - "astorage"
           volumeMounts:
-          # - name: anfisa-annotation-configs
-          #   mountPath: /data/project/AStorage/astorage.cfg
-          #   subPath: astorage.cfg
-          # - name: anfisa-annotation-configs
-          #   mountPath: /data/project/AStorage/config.json
-          #   subPath: config.json
+          - name: anfisa-annotation-configs
+            mountPath: /data/project/AStorage/astorage.cfg
+            subPath: astorage.cfg
+          - name: anfisa-annotation-configs
+            mountPath: /data/project/AStorage/config.json
+            subPath: config.json
           - name: anfisa-annotation-vep-cache
             mountPath: /opt/vep/.vep/
           - name: anfisa-annotation-data
             mountPath: /data/forannotation/
-          # - name: anfisa-annotation-db
-          #   mountPath: /db/
+          - name: anfisa-annotation-db
+            mountPath: /db/
           - name: anfisa-annotation-rdbs
             mountPath: /data/project/AStorage/rdbs/
-          - name: anfisa-annotation-schema
-            mountPath: /data/project/AStorage/schema/
-          - name: anfisa-annotation-venv
-            mountPath: /data/project/AStorage/venv/
       volumes:
       - name: anfisa-annotation-configs
         configMap:
@@ -74,16 +70,11 @@ spec:
       - name: anfisa-annotation-data
         persistentVolumeClaim:
           claimName: annotation-data-pvc
-      # - name: anfisa-annotation-db
-      #   persistentVolumeClaim:
-      #     claimName: annotation-db-pvc
+      - name: anfisa-annotation-db
+        persistentVolumeClaim:
+          claimName: annotation-db-pvc
       - name: anfisa-annotation-rdbs
         persistentVolumeClaim:
           claimName: annotation-rdbs-pvc
-      - name: anfisa-annotation-schema
-        persistentVolumeClaim:
-          claimName: annotation-schema-pvc
-      - name: anfisa-annotation-venv
-        persistentVolumeClaim:
-          claimName: annotation-venv-pvc
+
       terminationGracePeriodSeconds: 5

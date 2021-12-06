@@ -13,7 +13,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 100Gi
   volumeMode: Filesystem
   storageClassName: ibmc-vpc-block-10iops-tier
 ---
@@ -36,31 +36,11 @@ spec:
   volumeMode: Filesystem
   storageClassName: ibmc-vpc-block-10iops-tier
 
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: annotation-db-pvc
-#   namespace: {{ .Values.annotator.project }}
-#   labels:
-#     app.kubernetes.io/component: {{ .Values.annotator.name }}
-#     app.kubernetes.io/instance: {{ .Values.annotator.name }}
-#     app.kubernetes.io/name: {{ .Values.annotator.name }}
-#     app: {{ .Values.annotator.name }}
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   resources:
-#     requests:
-#       storage: 1000Gi
-#   volumeMode: Filesystem
-#   storageClassName: ibmc-vpc-block-10iops-tier
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: annotation-rdbs-pvc
+  name: annotation-db-pvc
   namespace: {{ .Values.annotator.project }}
   labels:
     app.kubernetes.io/component: {{ .Values.annotator.name }}
@@ -80,7 +60,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: annotation-schema-pvc
+  name: annotation-rdbs-pvc
   namespace: {{ .Values.annotator.project }}
   labels:
     app.kubernetes.io/component: {{ .Values.annotator.name }}
@@ -92,26 +72,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
-  volumeMode: Filesystem
-  storageClassName: ibmc-vpc-block-10iops-tier
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: annotation-venv-pvc
-  namespace: {{ .Values.annotator.project }}
-  labels:
-    app.kubernetes.io/component: {{ .Values.annotator.name }}
-    app.kubernetes.io/instance: {{ .Values.annotator.name }}
-    app.kubernetes.io/name: {{ .Values.annotator.name }}
-    app: {{ .Values.annotator.name }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Gi
+      storage: 1000Gi
   volumeMode: Filesystem
   storageClassName: ibmc-vpc-block-10iops-tier

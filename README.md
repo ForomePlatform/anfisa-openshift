@@ -28,6 +28,10 @@ MySQL
 
 `cd anfisa-chart/`
 
+6.  Assign the anyuid security context constraint to the project:
+
+`oc adm policy add-scc-to-user anyuid system:serviceaccount:<project name>:default`
+  
 7.  Start deploy
 
 `helm install anfisa -n "PROJECT_NAME" --debug  .`

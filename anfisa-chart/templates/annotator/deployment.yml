@@ -16,9 +16,9 @@ spec:
     spec:
       serviceAccountName: default
       securityContext:
-        fsGroup: 999
+        fsGroup: 0
         # fsUser: 999
-        runAsUser: 999
+        runAsUser: 0
       initContainers:
         - name: anfisa-vep-config
           image: "{{ .Values.annotator.output_registry }}/{{ .Values.annotator.project }}/{{ .Values.annotator.name }}"

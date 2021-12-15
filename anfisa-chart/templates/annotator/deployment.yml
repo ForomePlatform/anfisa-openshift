@@ -58,12 +58,15 @@ spec:
             mountPath: /data/forannotation/
           - name: anfisa-annotation-db
             mountPath: /db/
-          - name: anfisa-annotation-rdbs
+          - name: anfisa-annotation-data
             mountPath: /data/project/AStorage/rdbs/
-          - name: anfisa-annotation-schema
+            subPath: rdbs
+          - name: anfisa-annotation-data
             mountPath: /data/project/AStorage/schema/
-          - name: anfisa-annotation-venv
+            subPath: schema
+          - name: anfisa-annotation-data
             mountPath: /data/project/AStorage/venv/
+            subPath: venv
       volumes:
       - name: anfisa-annotation-configs
         configMap:
@@ -77,14 +80,6 @@ spec:
       - name: anfisa-annotation-db
         persistentVolumeClaim:
           claimName: annotation-db-pvc
-      - name: anfisa-annotation-rdbs
-        persistentVolumeClaim:
-          claimName: annotation-rdbs-pvc
-      - name: anfisa-annotation-schema
-        persistentVolumeClaim:
-          claimName: annotation-schema-pvc
-      - name: anfisa-annotation-venv
-        persistentVolumeClaim:
-          claimName: annotation-venv-pvc
+
 
       terminationGracePeriodSeconds: 5

@@ -14,6 +14,7 @@ spec:
     dockerStrategy:
       noCache: false
       dockerfilePath: Dockerfile
+      # dockerfilePath: Dockerfile.multistage
   triggers:
     - type: GitHub
       github:

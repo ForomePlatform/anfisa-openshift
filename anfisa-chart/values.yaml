@@ -27,8 +27,8 @@ ingress:
 # ------------------------------------------------------------------------------
 
 anfisa:
-  project: test
-  name: anfisa-test
+  project: anfisa
+  name: anfisa
   git_uri: https://github.com/ForomePlatform/anfisa-openshift.git
   git_branch: master
   output_registry: image-registry.openshift-image-registry.svc:5000
@@ -40,7 +40,7 @@ anfisa:
 # anfisa_front:
 # 
 anfisa_front:
-  name: anfisa-test-front
+  name: anfisa-front
   git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client.git
   git_branch: main
   
@@ -49,8 +49,9 @@ anfisa_front:
 # ------------------------------------------------------------------------------
 
 annotator:
-  project: test
-  name: anfisa-annotation-test
+  project: anfisa
+  name: anfisa-annotation
   git_uri: https://github.com/evgeniyabrosin/Anfisa-Annotations.git
+  # git_uri: https://github.com/nikita-kapishev/Anfisa-Annotations.git
   git_branch: docker-support
   output_registry: image-registry.openshift-image-registry.svc:5000

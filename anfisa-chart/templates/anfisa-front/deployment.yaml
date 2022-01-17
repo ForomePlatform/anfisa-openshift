@@ -23,44 +23,11 @@ spec:
         image: {{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa_front.name }}:latest
         ports:
         - containerPort: 80
+        volumeMounts:
+          - name: s3
+            mountPath: /datatest
+      volumes:
+        - name: s3
+          persistentVolumeClaim:
+            claimName: s3pvc
       restartPolicy: Always
-
-# apiVersion: apps.openshift.io/v1
-# kind: DeploymentConfig
-# metadata:
-#   name: {{ .Values.anfisa_front.name }}
-#   labels:
-#     app: {{ .Values.anfisa_front.name }}
-#     deploymentconfig: {{ .Values.anfisa_front.name }}
-# spec:
-#   replicas: 1
-#   selector:
-#     app: {{ .Values.anfisa_front.name }}
-#     deploymentconfig: {{ .Values.anfisa_front.name }}
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ .Values.anfisa_front.name }}
-#         deploymentconfig: {{ .Values.anfisa_front.name }}
-#     spec:
-#       containers:
-#         - name: {{ .Values.anfisa_front.name }}
-#           image: "{{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa_front.name }}"
-#           terminationMessagePath: /dev/termination-log
-#           terminationMessagePolicy: File
-#           tty: true
-#           stdin: true
-#       serviceAccountName: default
-#       terminationGracePeriodSeconds: 5
-#   triggers:
-#   - type: ConfigChange
-#   - imageChangeParams:
-#       automatic: true
-#       containerNames:
-#       - {{ .Values.anfisa_front.name }}
-#       from:
-#         kind: ImageStreamTag
-#         name: "{{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa_front.name }}:latest"
-#     type: ImageChange
-#   strategy:
-#     type: Rolling

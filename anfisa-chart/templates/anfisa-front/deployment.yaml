@@ -31,4 +31,3 @@ spec:
           persistentVolumeClaim:
             claimName: s3pvc
       restartPolicy: Always
-      restartPolicy: Always

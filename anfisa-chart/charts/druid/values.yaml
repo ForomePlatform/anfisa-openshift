@@ -254,30 +254,30 @@ zookeeper:
 # ------------------------------------------------------------------------------
 # PostgreSql:
 # ------------------------------------------------------------------------------
-postgresql:
-  enabled: true
-  postgresqlPostgresPassword: druidroot
-  postgresqlUsername: druid
-  postgresqlPassword: druid
-  postgresqlDatabase: druid
+# postgresql:
+#   enabled: true
+#   postgresqlPostgresPassword: druidroot
+#   postgresqlUsername: druid
+#   postgresqlPassword: druid
+#   postgresqlDatabase: druid
 
 # ------------------------------------------------------------------------------
 # MongoDB:
 # ------------------------------------------------------------------------------
-mongodb:
-  enabled: true
-  useStatefulSet: true
-  architecture: standalone
-  auth:
-    enabled: false
-    username: admin
-    database: temp
-  podSecurityContext:
-    enabled: true
-    fsGroup: 1000700000
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 1000700000
-    runAsNonRoot: true
-  serviceAccount:
-    enabled: true
+# mongodb:
+#   enabled: true
+#   useStatefulSet: true
+#   architecture: standalone
+#   auth:
+#     enabled: false
+#     username: admin
+#     database: temp
+#   podSecurityContext:
+#     enabled: true
+#     fsGroup: 1000700000
+#   containerSecurityContext:
+#     enabled: true
+#     runAsUser: 1000700000
+#     runAsNonRoot: true
+#   serviceAccount:
+#     enabled: true

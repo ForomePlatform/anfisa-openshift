@@ -7,10 +7,10 @@ hostNetwork: false
 revisionHistoryLimit: 5
 
 image:
-  repository: mysql
+  repository: bitnami/mysql
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "8.0.26"
+  tag: "8.0.28"
 
 mysql:
 #  rootPassword: dG9vcg==

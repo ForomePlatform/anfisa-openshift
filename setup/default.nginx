@@ -20,12 +20,12 @@ server {
         }
         
         location ~ /app/ui/images {
-                #rewrite ^/app/ui/images/(.*)$ /$1 break;
+                rewrite ^/app/ui/images/(.*)$ /$1 break;
                 root /anfisa/anfisa/int_ui/images;
         }
 
         location ~ /app/ui {
-                #rewrite ^/app/ui/(.*)$ /$1 break;
+                rewrite ^/app/ui/(.*)$ /$1 break;
                 root /anfisa/a-setup/ui;
         }
 

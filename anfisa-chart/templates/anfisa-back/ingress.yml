@@ -21,7 +21,7 @@ spec:
             backend:
               serviceName: anfisa-frontend
               servicePort: 80
-          - path: /anfisa/app
+          - path: /app
             pathType: ImplementationSpecific
             backend:
               serviceName: anfisa-backend

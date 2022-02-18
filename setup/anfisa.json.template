@@ -2,7 +2,7 @@
     "file-path-def": {"WORK": "/anfisa/a-setup", "SRC": "PATH_TO_SOURCE"},
     "host": "0.0.0.0",
     "port": 3041,
-    "html-base": "/anfisa/app",
+    "html-base": "/app",
     "html-title": "Anfisa",
     "data-vault": "${WORK}/vault",
     "run-options": [],

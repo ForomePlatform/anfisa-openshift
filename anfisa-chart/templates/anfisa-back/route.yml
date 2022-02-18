@@ -7,7 +7,7 @@ metadata:
 spec:
   host: >-
     {{ .Values.ingress.host }}
-  path: /anfisa/app
+  path: /app
   to:
     kind: Service
     name: anfisa-backend

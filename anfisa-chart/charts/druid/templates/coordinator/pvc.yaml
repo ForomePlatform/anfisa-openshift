@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: druid-pvc
+  labels:
+    app: {{ include "druid.name" . }}
+    chart: {{ include "druid.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1000Gi
+  volumeMode: Filesystem
+  storageClassName: ibmc-vpc-block-10iops-tier

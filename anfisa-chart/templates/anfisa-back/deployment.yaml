@@ -46,24 +46,28 @@ spec:
 #          args:
 #            - "/usr/bin/entrypoint.sh"        
           volumeMounts:
-          - name: data2
-            mountPath: /datatest
+          - name: forome-anfisa
+            mountPath: /data/anfisa/
+
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
-          - name: anfisa-config
-            mountPath: /anfisa/anfisa.json
-            subPath: anfisa.json
+
+
+          # - name: anfisa-config
+          #   mountPath: /anfisa/anfisa.json
+          #   subPath: anfisa.json
      
       volumes:
-      - name: data2
+      - name: forome-anfisa
         persistentVolumeClaim:
-          claimName: s3pvc
+          claimName: forome-anfisa-s3-pvc
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
         persistentVolumeClaim:
           claimName: {{ .Values.anfisa.anfisa_volumes.workdir_claim_name }}
-      - name: anfisa-config
-        configMap:
-          name: {{ .Values.anfisa.name }}
-          defaultMode: 420
+
+      # - name: anfisa-config
+      #   configMap:
+      #     name: {{ .Values.anfisa.name }}
+      #     defaultMode: 420
 
       terminationGracePeriodSeconds: 5

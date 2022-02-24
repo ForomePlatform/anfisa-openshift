@@ -31,8 +31,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         volumeMounts:
-          - name: data2
-            mountPath: /datatest
+          # - name: druid-data
+          #   mountPath: /datatest
         args: [ "coordinator" ]
         env:
         {{- if .Values.zookeeper.enabled }}
@@ -84,9 +84,9 @@ spec:
         resources:
 {{ toYaml .Values.coordinator.resources | indent 12 }}
       volumes:
-      - name: data2
-        persistentVolumeClaim:
-          claimName: s3pvc
+      # - name: druid-data
+      #   persistentVolumeClaim:
+      #     claimName: druid-pvc
 
       {{- if .Values.monitoring.enabled }}
       - name: druid-metrics-exporter

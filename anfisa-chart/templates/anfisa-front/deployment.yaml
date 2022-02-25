@@ -23,11 +23,5 @@ spec:
         image: {{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa_front.name }}:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-          - name: s3
-            mountPath: /datatest
-      volumes:
-        - name: s3
-          persistentVolumeClaim:
-            claimName: s3pvc
+
       restartPolicy: Always

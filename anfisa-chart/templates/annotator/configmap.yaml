@@ -139,9 +139,9 @@ data:
             "apikey": "3dc904aa9c434e9cae4b28c2b5021101"
         },
         "database": {
-            "hg38": "/data/annotations/database/1.0.0/annotation-hg38",
-            "hg37": "/data/annotations/database/1.0.0/annotation-hg37",
-            "pastorage": "/project/AStorage/"
+            "hg38": "/data/project/database/1.0.0/annotation-hg38",
+            "hg37": "/data/project/database/1.0.0/annotation-hg37",
+            "pastorage": "/data/project/AStorage/"
         },
         "source": {
             "external": {

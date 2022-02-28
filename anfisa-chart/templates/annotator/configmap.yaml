@@ -6,7 +6,7 @@ data:
   astorage.cfg: |
     {
       "file-path-def": {
-        "LOAD": "/db/download",
+        "LOAD": "/data/downloads",
         "WORK": "/data/project/AStorage"
       },
 

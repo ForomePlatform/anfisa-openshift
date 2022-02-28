@@ -60,6 +60,9 @@ spec:
             mountPath: /data/project/database/
             subPath: database
           - name: data
+            mountPath: /data/downloads/
+            subPath: downloads
+          - name: data
             mountPath: /data/project/AStorage/rdbs/
             subPath: rdbs
           - name: data

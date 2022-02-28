@@ -46,18 +46,18 @@ spec:
           args:
             - "astorage"
           volumeMounts:
-          - name: configs
-            mountPath: /data/project/AStorage/astorage.cfg
-            subPath: astorage.cfg
-          - name: configs
-            mountPath: /data/project/AStorage/config.json
-            subPath: config.json
+          
           - name: vep-cache
             mountPath: /opt/vep/.vep/
           # - name: anfisa-annotation-data
           #   mountPath: /data/forannotation/
           # - name: anfisa-annotation-db
           #   mountPath: /db/
+
+          - name: data
+            mountPath: /data/project/database/
+            subPath: database
+
           - name: data
             mountPath: /data/project/AStorage/rdbs/
             subPath: rdbs
@@ -73,9 +73,6 @@ spec:
             mountPath: /data/annotation
           
       volumes:
-      - name: configs
-        configMap:
-          name: {{ .Values.annotator.name }}
 
       - name: vep-cache
         persistentVolumeClaim:

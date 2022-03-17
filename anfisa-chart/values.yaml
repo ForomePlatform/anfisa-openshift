@@ -7,7 +7,7 @@
 
 volumeclaim :
   bucket: forome-anfisa
-  secret: cos-write-access
+  secret: forome-anfisa-writer
   # claim: s3pvc ----> #hardcode in PVC
   # access_mode: ReadWriteOnce ----> #hardcode in PVC
   # size: "1000Gi" #hardcode

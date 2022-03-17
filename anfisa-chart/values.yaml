@@ -18,7 +18,7 @@ volumeclaim :
 # ------------------------------------------------------------------------------
 ingress:
   name: anfisa-ingress
-  host: qa.anfisa.asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000.us-south.containers.appdomain.cloud
+  host: qa.asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000.us-south.containers.appdomain.cloud
   certificate: asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000
   #oc get secrets -n openshift-ingress - view secrets with TLC-certificates
 

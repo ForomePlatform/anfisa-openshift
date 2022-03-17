@@ -7,7 +7,7 @@
 
 volumeclaim :
   bucket: forome-anfisa
-  secret: forome-anfisa-writer
+  secret: cos-write-access
   # claim: s3pvc ----> #hardcode in PVC
   # access_mode: ReadWriteOnce ----> #hardcode in PVC
   # size: "1000Gi" #hardcode
@@ -18,7 +18,7 @@ volumeclaim :
 # ------------------------------------------------------------------------------
 ingress:
   name: anfisa-ingress
-  host: anfisa.asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000.us-south.containers.appdomain.cloud
+  host: qa.anfisa.asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000.us-south.containers.appdomain.cloud
   certificate: asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000
   #oc get secrets -n openshift-ingress - view secrets with TLC-certificates
 
@@ -27,7 +27,7 @@ ingress:
 # ------------------------------------------------------------------------------
 
 anfisa:
-  project: anfisa
+  project: anfisa-qa
   name: anfisa-back
   git_uri: https://github.com/ForomePlatform/anfisa-openshift.git
   git_branch: master
@@ -42,14 +42,14 @@ anfisa:
 anfisa_front:
   name: anfisa-front
   git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client-1.git
-  git_branch: release-v.0.2.1
+  git_branch: develop
   
 # ------------------------------------------------------------------------------
 # Annotator:
 # ------------------------------------------------------------------------------
 
 annotator:
-  project: anfisa
+  project: anfisa-qa
   name: annotation
   git_uri: https://github.com/evgeniyabrosin/Anfisa-Annotations.git
   # git_uri: https://github.com/nikita-kapishev/Anfisa-Annotations.git

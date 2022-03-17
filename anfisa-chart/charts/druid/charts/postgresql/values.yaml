@@ -170,7 +170,7 @@ serviceAccount:
   name: ""
   ## @param serviceAccount.autoMount Auto-mount the service account token in the pod
   ##
-  autoMount: false
+  autoMount: false 
 ## Pod Security Policy
 ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 ## @param psp.create Create Pod Security Policy

@@ -30,7 +30,7 @@ anfisa:
   project: anfisa-qa
   name: anfisa-back
   git_uri: https://github.com/ForomePlatform/anfisa-openshift.git
-  git_branch: master
+  git_branch: v.0.7
   output_registry: image-registry.openshift-image-registry.svc:5000
   anfisa_volumes:
     workdir_volume: anfisa-workdir

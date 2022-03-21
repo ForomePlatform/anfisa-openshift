@@ -71,6 +71,13 @@ class DataSet(SolutionBroker):
         self.mFInfo = self.mDataVault.checkFileStat(
             self.mPath + "/dsinfo.json")
         self.mCondVisitorTypes = []
+        reference = dataset_info["meta"]["versions"].get("reference")
+        self.mFastaBase = "hg38" if reference and "38" in reference else "hg19"
+
+        if self.getBaseDSName():
+            self.addModes({"DERIVED"})
+        else:
+            self.addModes({"SECONDARY"})
 
         if self.getDataSchema() == "FAVOR" and self.mDSKind == "xl":
             self.mRecStorage = FavorStorage(
@@ -87,6 +94,9 @@ class DataSet(SolutionBroker):
         self.mViewContext = dict()
         if self.mFamilyInfo.getCohortList():
             self.mViewContext["cohorts"] = self.mFamilyInfo.getCohortMap()
+            self.addModes({"COHORTS"})
+        elif self.getDataSchema() != "FAVOR":
+            self.addModes({"PROBAND"})
         completeDsModes(self)
 
         tuneAspects(self, self.mAspects)
@@ -140,6 +150,9 @@ class DataSet(SolutionBroker):
 
     def getRecStorage(self):
         return self.mRecStorage
+
+    def getDirPath(self):
+        return self.mPath
 
     #===============================================
     def getViewSchema(self):
@@ -274,6 +287,11 @@ class DataSet(SolutionBroker):
                         unit_groups.append([cur_v_group, []])
                 unit_groups[-1][1].append(unit_h.getName())
             ret["unit-groups"] = unit_groups
+            igv_url = self.mDataVault.getIGVUrl(self.getRootDSName())
+            if igv_url is not None:
+                ret["igv-urls"] = [
+                    f"{igv_url}/{sample_nm}.{self.mFastaBase}.bam"
+                    for sample_nm in self.mFamilyInfo.getNames()]
         return ret
 
     #===============================================
@@ -373,7 +391,7 @@ class DataSet(SolutionBroker):
         return filter_h
 
     def _getArgDTree(self, rq_args, activate_it = True,
-            use_dtree = True, dtree_h = None):
+            use_dtree = True, dtree_h = None, no_cache = False):
         if dtree_h is None:
             if use_dtree and "dtree" in rq_args:
                 dtree_h = self.pickSolEntry("dtree", rq_args["dtree"])
@@ -383,7 +401,8 @@ class DataSet(SolutionBroker):
                 assert "code" in rq_args, (
                     'Missing request argument: "dtree" or "code"')
                 dtree_h = DTreeEval(self.getEvalSpace(), rq_args["code"])
-        dtree_h = self.updateSolEntry("dtree", dtree_h)
+        if not no_cache:
+            dtree_h = self.updateSolEntry("dtree", dtree_h)
         if activate_it:
             dtree_h.activate()
         return dtree_h
@@ -545,7 +564,7 @@ class DataSet(SolutionBroker):
     @RestAPI.ds_request
     def rq__dtree_check(self, rq_args):
         dtree_h = self._getArgDTree(rq_args,
-            use_dtree = False, activate_it = False)
+            use_dtree = False, activate_it = False, no_cache = True)
         ret_handle = {"code": dtree_h.getCode()}
         if dtree_h.getErrorInfo() is not None:
             ret_handle.update(dtree_h.getErrorInfo())

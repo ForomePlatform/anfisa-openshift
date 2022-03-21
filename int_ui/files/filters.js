@@ -121,12 +121,12 @@ var sUnitsH = {
         this.mUnitMap = {}
         var list_stat_rep = [];
         this.mUnitsDelay = [];
-        fillStatList(
-            this.mItems, this.mUnitMap, list_stat_rep, this.mUnitsDelay);
-        this.mDivList.className = "";
-        this.mDivList.innerHTML = list_stat_rep.join('\n');
-        sUnitClassesH.updateItems(this.mItems);
         
+        this.mDivList.className = "";
+        sUnitClassesH.setupItems(
+            this.mItems, this.mTotalCounts, 
+            this.mUnitMap, this.mUnitsDelay, this.mDivList);
+                
         var unit_name = this.mCurUnit;
         if (unit_name) {
             var unit_idx = null;
@@ -182,15 +182,16 @@ var sUnitsH = {
         if (cur_el)
             var prev_top = cur_el.getBoundingClientRect().top;
         var prev_unit = this.mCurUnit;
-        var prev_h =  (this.mCurUnit)? topUnitStat(this.mCurUnit):null;
+        var prev_h =  sUnitClassesH.topUnitStat(this.mCurUnit);
         for (var idx = 0; idx < info["units"].length; idx++) {
             unit_stat = info["units"][idx];
-            refillUnitStat(unit_stat);
             unit_name = unit_stat["name"];
+            unit_idx = this.mUnitMap[unit_name];
+            sUnitClassesH.refillUnitStat(unit_stat, unit_idx);
             var pos = this.mUnitsDelay.indexOf(unit_name);
             if (pos >= 0)
                 this.mUnitsDelay.splice(pos, 1);
-            this.mItems[this.mUnitMap[unit_name]] = unit_stat;
+            this.mItems[unit_idx] = unit_stat;
             if (this.mCurUnit == unit_name)
                 this.selectUnit(unit_name, true);
             if (cur_el) {
@@ -198,6 +199,7 @@ var sUnitsH = {
                 this.mDivList.scrollTop += cur_top - prev_top;
             }
         }
+        sUnitClassesH.update();
         this.checkDelayed();
     },
     
@@ -354,7 +356,7 @@ var sOpFilterH = {
 
     addCondition: function(new_cond, idx) {
         new_seq = sConditionsH.getConditions().slice();
-        if (idx == undefined)
+        if (idx === undefined)
             new_seq.push(new_cond);
         else
             new_seq.splice(idx, 0, new_cond);
@@ -921,14 +923,14 @@ var sFiltersH = {
 /*************************************/
 function showExport() {
     relaxView();
-    if (getCurCount() <= 300)
+    if (getCurCount() <= 9000)
         res_content = 'Export ' + getCurCount() + ' variants?<br>' +
             '<button class="popup" onclick="doExport();">To Excel</button>' + 
             '&emsp;<button class="popup" onclick="doCSVExport();">To CSV</button>' + 
             '&emsp;<button class="popup" onclick="relaxView();">Cancel</button>';
     else
         res_content = 'Too many variants for export: ' + 
-            getCurCount() + ' > 300.<br>' +
+            getCurCount() + ' > 9000.<br>' +
             '<button class="popup" onclick="relaxView();">Cancel</button>';
     res_el = document.getElementById("export-result");
     res_el.innerHTML = res_content;

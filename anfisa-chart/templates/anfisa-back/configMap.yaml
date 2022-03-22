@@ -62,7 +62,7 @@ data:
           "query": "http://router:80/druid/v2",
           "sql":   "http://router:80/druid/v2/sql",
           "coord": "http://anfisa-druid-coordinator:8081/druid/coordinator/v1",
-          "copydir": "/datatest/"
+          "copydir": "/data/"
       },
 
       "mongo-host": "anfisa-mongodb",

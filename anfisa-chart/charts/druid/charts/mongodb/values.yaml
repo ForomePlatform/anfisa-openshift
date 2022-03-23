@@ -59,7 +59,7 @@ architecture: standalone
 
 ## Use StatefulSet instead of Deployment when deploying standalone
 ##
-useStatefulSet: false
+useStatefulSet: true
 
 ## MongoDB(R) Authentication parameters
 ##
@@ -67,7 +67,7 @@ auth:
   ## Enable authentication
   ## ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
   ##
-  enabled: true
+  enabled: false
   ## MongoDB(R) root password
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
   ##
@@ -75,9 +75,9 @@ auth:
   ## MongoDB(R) custom user and database
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
   ##
-  # username: username
+  username: admin
   # password: password
-  # database: database
+  database: temp
   ## Key used for replica set authentication
   ## Ignored when mongodb.architecture=standalone
   ##

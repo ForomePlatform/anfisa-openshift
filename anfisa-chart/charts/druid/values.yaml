@@ -25,8 +25,8 @@ env:
   ##druid_s3_secretKey: 1516c07bd8342f6840f2cee19af906e42344892355fe52e4
   druid_storage_disableAcl: true
   druid_storage_type: local
-  druid_storage_storageDirectory: /datatest/var/druid/segments
-  druid_indexer_logs_directory: /datatest/var/druid/indexing-logs
+  druid_storage_storageDirectory: /data/anfisa/var/druid/segments
+  druid_indexer_logs_directory: /data/anfisa/var/druid/indexing-logs
   druid_indexer_logs_type: file
   #druid_storage_bucket: anfisa-druid
   #druid_storage_baseKey: druid/segments

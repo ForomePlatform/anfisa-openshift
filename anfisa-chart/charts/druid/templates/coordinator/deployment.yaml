@@ -86,7 +86,7 @@ spec:
       volumes:
       - name: druid-data
         persistentVolumeClaim:
-          claimName: druid-pvc
+          claimName: s3pvc
 
       {{- if .Values.monitoring.enabled }}
       - name: druid-metrics-exporter

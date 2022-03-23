@@ -28,9 +28,9 @@ spec:
         {{- end }}
     spec:
       volumes:
-        - name: druid-data
-          persistentVolumeClaim:
-            claimName: druid-pvc
+      - name: druid-data
+        persistentVolumeClaim:
+          claimName: druid-pvc
       {{- if or .Values.middleManager.antiAffinity .Values.middleManager.nodeAffinity }}
       affinity:
       {{- end }}

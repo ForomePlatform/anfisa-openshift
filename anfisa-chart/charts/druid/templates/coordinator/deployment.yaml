@@ -31,8 +31,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         volumeMounts:
-          - name: druid-data
-            mountPath: /data
+        - name: druid-data
+          mountPath: /data
         args: [ "coordinator" ]
         env:
         {{- if .Values.zookeeper.enabled }}

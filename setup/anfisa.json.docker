@@ -3,12 +3,12 @@
     "host": "0.0.0.0",
     "port": 3041,
     "html-base": "/app",
-    "html-title": "Anfisa v7/Docker",
+    "html-title": "Anfisa v7 in Docker",
     "data-vault": "${WORK}/vault",
     "run-options": [],
     "run-modes": [],
     "job-vault-check-period": 30,
-    "igv-dir": "${HOME}/igv.dir",
+    "igv-dir": "/anfisa/anfisa/igv.dir",
     "--solutions": {
         "panels": {
             "Symbol": {

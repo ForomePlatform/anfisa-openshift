@@ -41,7 +41,7 @@ anfisa:
 # 
 anfisa_front:
   name: anfisa-front
-  git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client-1.git
+  git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client.git
   git_branch: develop
   
 # ------------------------------------------------------------------------------

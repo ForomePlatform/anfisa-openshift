@@ -28,9 +28,9 @@ spec:
         {{- end }}
     spec:
       volumes:
-        # - name: druid-data
-        #   persistentVolumeClaim:
-        #     claimName: druid-pvc
+        - name: druid-data
+          persistentVolumeClaim:
+            claimName: druid-pvc
       {{- if or .Values.historical.antiAffinity .Values.historical.nodeAffinity }}
       affinity:
       {{- end }}
@@ -126,8 +126,8 @@ spec:
         volumeMounts:
         - mountPath: /opt/druid/var
           name: data
-        # - name: druid-data
-        #   mountPath: /datatest
+        - name: druid-data
+          mountPath: /datatest
 
 
       {{- if .Values.monitoring.enabled }}

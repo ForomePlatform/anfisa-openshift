@@ -32,7 +32,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         volumeMounts:
         - name: druid-data
-          mountPath: /data
+          mountPath: /data/anfisa
         args: [ "coordinator" ]
         env:
         {{- if .Values.zookeeper.enabled }}
@@ -86,7 +86,7 @@ spec:
       volumes:
       - name: druid-data
         persistentVolumeClaim:
-          claimName: druid-pvc
+          claimName: forome-anfisa-s3-pvc
 
       {{- if .Values.monitoring.enabled }}
       - name: druid-metrics-exporter

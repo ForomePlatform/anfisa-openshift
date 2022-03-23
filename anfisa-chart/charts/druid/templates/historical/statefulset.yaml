@@ -30,7 +30,7 @@ spec:
       volumes:
       - name: druid-data
         persistentVolumeClaim:
-          claimName: druid-pvc
+          claimName: forome-anfisa-s3-pvc
       {{- if or .Values.historical.antiAffinity .Values.historical.nodeAffinity }}
       affinity:
       {{- end }}
@@ -127,7 +127,7 @@ spec:
         - mountPath: /opt/druid/var
           name: data
         - name: druid-data
-          mountPath: /data
+          mountPath: /data/anfisa
 
 
       {{- if .Values.monitoring.enabled }}

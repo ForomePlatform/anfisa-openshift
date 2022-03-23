@@ -1,14 +1,10 @@
 {
     "anfisa.json": "/anfisa/anfisa.json",
     "datasets": {
-#        "PGP3140_wgs_panel_hl": {
-#            "kind": "ws",
-#            "inv": "/opt/projects/anfisa/a-setup/data/examples/pgp3140_wgs_hlpanel/pgp3140_wgs_hlpanel.cfg"
-#        },
-#        "xl_PGP3140_wgs_panel_hl": {
-#            "kind": "xl",
-#            "inv": "/opt/projects/anfisa/a-setup/data/examples/pgp3140_wgs_hlpanel/pgp3140_wgs_hlpanel.cfg"
-#        },
+        "xl_PGP3140_wgs_panel_hl": {
+            "kind": "xl",
+            "inv": "/anfisa/a-setup/data/pgp3140_wgs_hlpanel/pgp3140_wgs_hlpanel.cfg"
+        },
         "xl_PGP3140_wgs_NIST-4_2": {
             "kind": "xl",
             "inv": "/anfisa/a-setup/data/pgp3140_wgs_nist-v4.2/pgp3140_wgs_nist-v4.2.cfg"

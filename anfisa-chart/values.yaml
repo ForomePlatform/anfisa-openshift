@@ -43,15 +43,3 @@ anfisa_front:
   name: anfisa-front
   git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client.git
   git_branch: develop
-  
-# ------------------------------------------------------------------------------
-# Annotator:
-# ------------------------------------------------------------------------------
-
-annotator:
-  project: anfisa-qa
-  name: annotation
-  git_uri: https://github.com/evgeniyabrosin/Anfisa-Annotations.git
-  # git_uri: https://github.com/nikita-kapishev/Anfisa-Annotations.git
-  git_branch: docker-support
-  output_registry: image-registry.openshift-image-registry.svc:5000

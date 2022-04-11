@@ -61,6 +61,8 @@ class NumDiapStat:
 
 #===============================================
 class NumHistogramBuilder:
+    sOneMinusShift = 1 - 1E-5
+
     def __init__(self, v_min, v_max, count, unit_h,
             too_low_power = -15, num_bins = 10):
         self.mIntMode = (unit_h.getSubKind() == "int")
@@ -71,23 +73,31 @@ class NumHistogramBuilder:
         if count < 2 or v_min >= v_max - 1E-15:
             return
 
-        if self.mIntMode:
-            v_min, v_max = int(v_min), int(v_max)
         if self.mLogMode:
             self.mInfo = ["LOG"]
-            pp = 0 if self.mIntMode else too_low_power
+            pp = 1 if self.mIntMode else too_low_power
             while (pow(1E1, pp) < v_min):
                 pp += 1
             self.mInfo.append(pp - 1)
             self.mIntervals = [pow(1E1, pp - 1)]
-            while (v_max > self.mIntervals[-1]):
-                self.mIntervals.append(pow(1E1, pp))
-                pp += 1
+            if self.mIntMode:
+                self.mIntervals[0] *= self.sOneMinusShift
+            while True:
+                next_bound = pow(1E1, pp)
+                low_next_bound = next_bound * self.sOneMinusShift
+                if v_max > low_next_bound:
+                    self.mIntervals.append(next_bound)
+                    pp += 1
+                    continue
+                if v_max >= next_bound:
+                    self.mIntervals.append(next_bound)
+                    pp += 1
+                break
+
             if len(self.mIntervals) == 1:
                 self.mInfo = None
                 self.mIntervals = None
                 return
-            self.mIntervals[-1] *= (1 - 1E-5)
             self.mInfo.append(pp)
         else:
             self.mInfo = ["LIN", v_min, v_max]

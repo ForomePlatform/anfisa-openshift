@@ -18,7 +18,7 @@
 #  limitations under the License.
 #
 import logging
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from .var_unit import VarUnit
 #===============================================
@@ -33,32 +33,35 @@ class VarietyUnit(VarUnit):
             "sub-kind": "multi"
         }
 
-    def __init__(self, base_unit_h):
+    def __init__(self, base_unit_h, full_mode):
         VarUnit.__init__(self, base_unit_h.getEvalSpace(),
             self.makeDescr(base_unit_h.getDescr(), "atom-name"),
             "enum", "multi")
         self.mBaseUnit = base_unit_h
+        self.mFullMode = full_mode
         self.mPanelUnit = VarietyPanelUnit(self,
             self.makeDescr(base_unit_h.getDescr(), "panel-name"))
         self.mSeparator = base_unit_h.getDescr()["separator"]
         self.mPanelType = base_unit_h.getDescr()["panel-type"]
         self.getInfo()["panel-name"] = self.mPanelUnit.getName()
-        self.getInfo()["variety"] = self.getName()
         self.mSingleSet = set()
         self.mMultiMap = defaultdict(list)
+        self.mAllAtoms = set()
+        counts = Counter()
         for info in base_unit_h.getDescr()["variants"]:
             val = info[0]
             seq = val.split(self.mSeparator)
+            counts[len(seq)] += 1
             if len(seq) == 1:
                 self.mSingleSet.add(val)
             else:
                 for nm in seq:
                     self.mMultiMap[nm].append(val)
+            self.mAllAtoms |= set(seq)
         ds_name = self.getEvalSpace().getDS().getName()
         cnt1, cnt2 = len(self.mSingleSet), len(self.mMultiMap)
-        logging.info(f"Variety {ds_name}:{self.getName()} started with:")
-        logging.info(f"\tsingle: {cnt1}, multi: {cnt2}")
-
+        logging.info(f"Variety {ds_name}:{self.getName()} started with:"
+            f"\tsingle: {cnt1}, multi: {cnt2} atoms, counts={counts}")
 
     def getPanelUnit(self):
         return self.mPanelUnit
@@ -93,28 +96,44 @@ class VarietyUnit(VarUnit):
             return self.getEvalSpace().getCondNone()
         return self.makeBaseCond(variants, filter_mode)
 
+    def fillRecord(self, inp_data, rec_no):
+        self.mBaseUnit.fillRecord(inp_data, rec_no)
+
     def makeStat(self, condition, eval_h, stat_ctx):
         base_stat = self.mBaseUnit.makeStat(condition, eval_h, None)
 
-        free_names = set()
-        key_ctx = "free." + self.getName()
-        if stat_ctx is not None and key_ctx in stat_ctx:
-            free_names = set(stat_ctx[key_ctx])
+        full_mode = self.mFullMode
+        panel_mode = True
+        free_names = None
+        if stat_ctx is not None:
+            key_ctx = "free." + self.getName()
+            if key_ctx in stat_ctx:
+                free_names = set(stat_ctx[key_ctx])
+            if stat_ctx.get("unit") == "internal":
+                full_mode = True
+                panel_mode = False
+
+        if free_names is None:
+            free_names = self.mAllAtoms
 
         atom_names = free_names.copy()
         panel_names = dict()
         panel_cnt = dict()
-        for pname, names in self.iterPanels():
-            names = set(names)
-            panel_names[pname] = names
-            panel_cnt[pname] = 0
-            atom_names |= names
+        if panel_mode:
+            for pname, names in self.iterPanels():
+                names = set(names)
+                panel_names[pname] = names
+                panel_cnt[pname] = 0
+                if not self.mFullMode:
+                    atom_names |= names
         atom_cnt = {nm: 0 for nm in atom_names}
 
         for base_var, count in base_stat["variants"]:
             if count < 1:
                 continue
-            names = set(base_var.split(self.mSeparator)) & atom_names
+            names = set(base_var.split(self.mSeparator))
+            if not full_mode:
+                names &= atom_names
             if len(names) == 0:
                 continue
             for nm in names:
@@ -124,13 +143,15 @@ class VarietyUnit(VarUnit):
                     panel_cnt[pname] += 1
 
         ret_handle = self.prepareStat(stat_ctx)
-        ret_handle["free-atoms"] = sorted(free_names)
-        ret_handle["panel-atoms"] = [[pname, sorted(panel_names[pname])]
-            for pname in sorted(panel_cnt.keys())]
+        if not self.mFullMode:
+            ret_handle["free-atoms"] = sorted(free_names)
         ret_handle["variants"] = [[nm, atom_cnt[nm]]
             for nm in sorted(atom_cnt.keys())]
-        ret_handle["panels"] = [[pname, panel_cnt[pname]]
-            for pname in sorted(panel_cnt.keys())]
+        if panel_mode:
+            ret_handle["panel-atoms"] = [[pname, sorted(panel_names[pname])]
+                for pname in sorted(panel_cnt.keys())]
+            ret_handle["panels"] = [[pname, panel_cnt[pname]]
+                for pname in sorted(panel_cnt.keys())]
         return ret_handle
 
 #===============================================
@@ -140,9 +161,7 @@ class VarietyPanelUnit(VarUnit):
         VarUnit.__init__(self, variety_h.getEvalSpace(),
             descr, "enum", "multi")
         self.mVariety = variety_h
-
-    def isScreened(self):
-        return True
+        self.getInfo()["atom-name"] = self.mVariety.getName()
 
     def mapVariants(self, variants):
         collected = set()
@@ -161,5 +180,10 @@ class VarietyPanelUnit(VarUnit):
         return self.mVariety.makeBaseCond(
             self.mapVariants(variants), filter_mode)
 
+    def fillRecord(self, inp_data, rec_no):
+        pass
+
     def makeStat(self, condition, eval_h, stat_ctx):
-        assert False
+        ret_handle = self.prepareStat(stat_ctx)
+        ret_handle["variants"] = []
+        return ret_handle

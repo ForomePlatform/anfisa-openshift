@@ -43,6 +43,7 @@ anfisa_front:
   name: anfisa-front
   git_uri: https://github.com/evgeniyabrosin/Anfisa-React-Client-1.git
   git_branch: develop
+  url_backend: qa.asset-forome-0b8a4e8de101bcbaf4eafc441eda83b3-0000.us-south.containers.appdomain.cloud/app/
   
 # ------------------------------------------------------------------------------
 # Annotator:

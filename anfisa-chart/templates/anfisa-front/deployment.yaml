@@ -20,16 +20,7 @@ spec:
         runAsUser: 0
       containers:
       - name: {{ .Values.anfisa_front.name }}
-        image: {{ .Values.anfisa_front.registry }}
+        image: {{ .Values.anfisa.output_registry }}/{{ .Values.anfisa.project }}/{{ .Values.anfisa_front.name }}:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-          - name: config-volume
-            mountPath: /usr/share/nginx/html
-      serviceAccount: default
-      volumes:
-        - name: config-volume
-          configMap:
-            name: front-config
-            defaultMode: 420
       restartPolicy: Always

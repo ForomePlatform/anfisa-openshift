@@ -64,6 +64,9 @@ spec:
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
         persistentVolumeClaim:
           claimName: {{ .Values.anfisa.anfisa_volumes.workdir_claim_name }}
+      - name: forome-datasets-pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.anfisa.anfisa_volumes.datasets_claim_name }}
 
       # - name: anfisa-config
       #   configMap:

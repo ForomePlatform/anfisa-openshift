@@ -32,4 +32,5 @@ spec:
         - name: config-volume
           configMap:
             name: front-config
+            defaultMode: 0666
       restartPolicy: Always

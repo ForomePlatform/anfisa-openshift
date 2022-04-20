@@ -35,6 +35,7 @@ anfisa:
   anfisa_volumes:
     workdir_volume: anfisa-workdir
     workdir_claim_name: anfisa-workdir-claim
+    datasets_claim_name: forome-datasets-pvc
 
 # ------------------------------------------------------------------------------
 # anfisa_front:

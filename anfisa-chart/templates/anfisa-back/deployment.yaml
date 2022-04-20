@@ -51,6 +51,9 @@ spec:
 
           - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
             mountPath: /anfisa/a-setup/
+          
+          - name: forome-datasets-pvc
+            mountPath: /mnt/forome-datasets
 
 
           # - name: anfisa-config
@@ -61,6 +64,7 @@ spec:
       - name: forome-anfisa
         persistentVolumeClaim:
           claimName: forome-anfisa-s3-pvc
+      
       - name: {{ .Values.anfisa.anfisa_volumes.workdir_volume }}
         persistentVolumeClaim:
           claimName: {{ .Values.anfisa.anfisa_volumes.workdir_claim_name }}

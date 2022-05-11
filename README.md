@@ -7,10 +7,7 @@
 - [Installation](#installation)
   * [Select branch or release:](#select-branch-or-release)
   * [Installation instructions](#installation-instructions)
-    + [Installing via Docker](#installing-via-docker)
-    + [Installing without Docker](#installing-without-docker)
-  * [Ingesting demo whole genome](#ingesting-demo-whole-genome)
-- [Public Demo](#public-demo)
+
 
 <!-- tocstop -->
 

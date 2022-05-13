@@ -1,8 +1,9 @@
-#kind: Ingress
-apiVersion: networking.k8s.io/v1beta1
-#apiVersion: config.openshift.io/v1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    meta.helm.sh/release-namespace: {{ .Values.anfisa.project }}
   name: {{ .Values.ingress.name }}
   namespace: {{ .Values.anfisa.project }}
 spec:
@@ -19,10 +20,14 @@ spec:
           - path: /
             pathType: ImplementationSpecific
             backend:
-              serviceName: anfisa-frontend
-              servicePort: 80
+              service:
+                name: anfisa-frontend
+                port:
+                  number: 80
           - path: /app
             pathType: ImplementationSpecific
             backend:
-              serviceName: anfisa-backend
-              servicePort: 80
+              service:
+                name: anfisa-backend
+                port:
+                  number: 80

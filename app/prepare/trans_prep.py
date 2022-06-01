@@ -41,7 +41,7 @@ class TransformPreparator_WS:
                 else:
                     self.mUnitStatSeq.append(NumUnitStatH(unit_descr))
             elif kind == "enum":
-                if sub_kind == "transcript-status":
+                if sub_kind in ("transcript-status", "transcript-variety"):
                     self.mConvertors.append(
                         TrStatusConvertor(unit_descr))
                 elif sub_kind == "transcript-multiset":
@@ -263,6 +263,7 @@ class TrMultisetConvertor(TrEnumConvertor):
         f_data[self.mName] = res
 
 #===============================================
+# reserved, currently out of use
 class TrPanelsConvertor:
     def __init__(self, sol_broker, unit_descr):
         self.mDescr = unit_descr
@@ -270,8 +271,8 @@ class TrPanelsConvertor:
         self.mBaseName = unit_descr["panel-base"]
         self.mPanelType = unit_descr["panel-type"]
         self.mViewName = unit_descr.get("view-name")
-        self.mPanelSets = {pname: set(names)
-            for pname, names in sol_broker.iterPanels(self.mPanelType)}
+        self.mPanelSets = {p_it.getName(): set(p_it.getData()) for p_it in
+            sol_broker.iterStdItems("panel." + self.mPanelType)}
         self.mVarCount = Counter()
 
     def isTranscriptID(self):

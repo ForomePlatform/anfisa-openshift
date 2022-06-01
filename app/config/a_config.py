@@ -44,6 +44,7 @@ class AnfisaConfig:
         "report.lines": 100,
         "ds.name.max.length": 255,
         "tag.name.max.length": 255,
+        "sol.name.max.length": 255,
 
         "xl.view.count.full": 300,
         "xl.view.count.samples.default": 25,
@@ -53,7 +54,8 @@ class AnfisaConfig:
         "export.max.count": 9000,
         "max.tab.rq.size": 9000,  # 50,
 
-        "filter.std.mark": u"\u23da",
+        "solution.std.mark": u"\u23da",
+        "solution.dyn.mark": u"\u2692",
         "code.error.mark": u"\u26a0",
 
         "rules.setup": {
@@ -61,6 +63,10 @@ class AnfisaConfig:
             "vgroup": "Decision trees application",
             "title": None,
             "render": None
+        },
+
+        "panels.setup": {
+            "Symbol": {"unit": "Symbol"}
         },
 
         "zygosity.path.base": "/__data/zygosity",
@@ -76,6 +82,7 @@ class AnfisaConfig:
         "long.run.passtime": timedelta(minutes = 10),
         "long.run.failures": 5,
 
+        "max.rest.size": 300,
         "comp-hets.cache.size": 10,
 
         "max.gene.comp.count": 10000}

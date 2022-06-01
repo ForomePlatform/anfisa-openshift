@@ -32,6 +32,7 @@ class VarUnit:
         self.mInternalName = descr["name"]
         self.mVGroup = descr.get("vgroup")
         self.mNo    = descr.get("no", -1)
+        self.mDimName = descr.get("dim-name")
         self.mScreened = False
         if unit_kind is not None:
             assert self.mUnitKind == unit_kind, (
@@ -40,10 +41,11 @@ class VarUnit:
         if sub_kind is not None:
             assert self.mSubKind == sub_kind, (
                 f"Sub-kind conflict: {self.mSubKind}/{sub_kind}"
-                f"for {self.mInternalName}")
+                f" for {self.mInternalName}")
 
         self.mInfo = self.mEvalSpace.getDS().getDataVault().getVariableInfo(
-            self.mInternalName, self.mUnitKind, self.mSubKind)
+            self.mInternalName, self.mUnitKind, self.mSubKind,
+            self.mDescr.get("mean"))
         self.mName = self.mInfo["name"].replace(' ', '_')
         self.mInfo["vgroup"] = self.mVGroup
         self.mInfo["kind"] = self.mUnitKind
@@ -92,6 +94,9 @@ class VarUnit:
     def getDescr(self):
         return self.mDescr
 
+    def getDimName(self):
+        return self.mDimName
+
     def prepareStat(self, stat_ctx, incomplete_mode = False):
         ret_handle = deepcopy(self.mInfo)
         if incomplete_mode:
@@ -119,6 +124,12 @@ class EnumUnitSupport:
             return self.getEvalSpace().getCondNone()
         return self.getEvalSpace().makeEnumCond(
             self, variants, filter_mode)
+
+    def filterActualVariants(self, variants):
+        return sorted(set(variants) & self.getVariantSet().makeValueSet())
+
+    def evalExtraVariants(self, variants):
+        return self.getVariantSet().makeValueSet() - set(variants)
 
 #===============================================
 #===============================================

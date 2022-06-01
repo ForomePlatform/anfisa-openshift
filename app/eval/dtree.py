@@ -144,6 +144,9 @@ class CheckPoint:
         line_from, line_to = self.mFrag.getLineDiap()
         return "\n".join(code_lines[line_from - 1: line_to - 1])
 
+    def visit(self, visitor):
+        pass
+
 #===============================================
 class LabelPoint(CheckPoint):
     def __init__(self, story, frag, prev_point):
@@ -241,6 +244,10 @@ class ConditionPoint(CheckPoint):
         #  , "label", "comment"]
         return ret
 
+    def visit(self, visitor):
+        if self.mCondition is not None:
+            self.mCondition.visit(visitor)
+
 #===============================================
 class DTreeEval(Evaluation, CaseStory):
     def __init__(self, eval_space, dtree_code, dtree_name = None,
@@ -301,17 +308,15 @@ class DTreeEval(Evaluation, CaseStory):
 
     def operationError(self, cond_data, err_msg):
         Evaluation.operationError(self, cond_data, err_msg)
-        for atom_info in self.mFragments[self.getCurPointNo()].getCondAtoms():
-            if cond_data is atom_info.getCondData():
-                atom_info.setError(err_msg)
-                return
-        assert False, "Condition atom not found: " + str(cond_data)
+        self.mFragments[self.getCurPointNo()]._setAtomError(cond_data, err_msg)
 
     def locateCondData(self, cond_data):
-        for atom_info in self.mFragments[self.getCurPointNo()].getCondAtoms():
-            if cond_data is atom_info.getCondData():
-                return self.getCurPointNo(), atom_info.getErrorMsg()
-        assert False, "Condition not found: " + json.dumps(cond_data)
+        for idx, frag_h in enumerate(self.mFragments):
+            atom_h = frag_h._getAtom(cond_data, is_optional = True)
+            if atom_h is not None:
+                return idx, atom_h
+        assert False, "Condition not found: " + json.dumps(cond_data,
+            sort_keys = True)
         return None
 
     def __len__(self):
@@ -449,3 +454,8 @@ class DTreeEval(Evaluation, CaseStory):
             if frag_h.getInstrType() == "If":
                 ret |= condDataUnits(frag_h.getCondData())
         return ret
+
+    def visitAll(self, visitor):
+        for point in self.mPointList:
+            if point.isActive():
+                point.visit(visitor)

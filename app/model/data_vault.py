@@ -18,7 +18,7 @@
 #  limitations under the License.
 #
 
-import sys, os, json, logging, traceback
+import sys, os, json, logging, traceback, re, shutil
 import typing, array
 from glob import glob
 from io import StringIO
@@ -195,7 +195,8 @@ class DataVault(SyncronizedObject):
 
     def unloadDS(self, ds_name, ds_kind = None):
         with self:
-            ds_h = self.mDataSets[ds_name]
+            ds_h = self.mDataSets.get(ds_name)
+            assert ds_h is not None, ("No dataset " + ds_name)
             assert not ds_kind or ds_kind == ds_h.getDSKind(), (
                 "Dataset kind collision: "
                 + ds_h.getDSKind() + " vs. " + ds_kind)
@@ -218,17 +219,19 @@ class DataVault(SyncronizedObject):
                     self.mApp.getMongoConnector(), root_name)
             return self.mSolEnvDict[root_name]
 
-    def getVariableInfo(self, var_name, unit_kind, sub_kind):
+    def getVariableInfo(self, var_name, unit_kind, sub_kind, mean):
         var_kind, var_descr = self.mVarRegistry.getVarInfo(var_name)
         assert unit_kind == var_kind, (
             f"Variable kind conflict: {unit_kind}/{var_kind} for {var_name}")
         var_info = deepcopy(var_descr)
         if unit_kind == "enum" and var_info.get("render-mode") is None:
-            if sub_kind in {"status", "transcript-status"}:
+            if mean == "variety":
+                var_info["render-mode"] = "tree-map"
+            elif sub_kind in {"status", "transcript-status"}:
                 var_info["render-mode"] = "pie"
             else:
-                assert sub_kind in {"multi",
-                    "transcript-multiset", "transcript-panels"}, (
+                assert sub_kind in {"multi", "transcript-multiset",
+                    "transcript-panels", "transcript-variety"}, (
                     "Wrong subkind: " + sub_kind)
                 var_info["render-mode"] = "bar"
         return var_info
@@ -272,8 +275,8 @@ class DataVault(SyncronizedObject):
                 return None
             return self.mIGVInfo.get(ds_name)
 
-    def getPanelDB(self, type):
-        assert type == "Symbol"
+    def getPanelDB(self, tp):
+        assert tp == "Symbol"
         return self.mGenesDB
 
     #===============================================
@@ -373,11 +376,6 @@ class DataVault(SyncronizedObject):
         return ret
 
     #===============================================
-    @RestAPI.vault_request
-    def rq__gene_info(self, rq_args):
-        return self.mGenesDB.getSymbolInfo(rq_args["symbol"])
-
-    #===============================================
     # Administrator authorization required
     @RestAPI.vault_request
     def rq__adm_update(self, rq_args):
@@ -391,3 +389,21 @@ class DataVault(SyncronizedObject):
         self.unloadDS(ds_name)
         self.loadDS(ds_name)
         return "Reloaded " + ds_name
+
+    @RestAPI.vault_request
+    def rq__adm_drop_ds(self, rq_args):
+        assert "ds" in rq_args, 'Missing request argument "ds"'
+        ds_name = rq_args["ds"]
+        patterns = self.mApp.getOption("auto-drop-datasets")
+        if patterns is None:
+            patterns = []
+        for pattern in patterns:
+            if re.search(pattern, ds_name):
+                logging.info(f"Drop dataset {ds_name} by rule '{pattern}'")
+                self.unloadDS(ds_name)
+                shutil.rmtree(self.mVaultDir + '/' + ds_name)
+                self.scanAll()
+                return "Dropped " + ds_name
+        assert False, (f"Drop dataset {ds_name} failed: "
+            + "no appropriate pattern in 'auto-drop-datasets' config option")
+        return None

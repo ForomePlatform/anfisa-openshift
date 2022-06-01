@@ -20,12 +20,12 @@
 
 import os, logging
 from glob import glob
-from app.config.a_config import AnfisaConfig
 from app.eval.condition import ConditionMaker
 from app.model.sol_pack import SolutionPack
+from app.model.sol_support import StdNameSupport
 from app.model.tab_report import ReportTabSchema
 from .favor import FavorSchema
-import app.config.view_tune as view_tune
+from app.config.view_op_tune import prepareSeqColorTransform
 #===============================================
 sCfgFilePath = os.path.dirname(os.path.abspath(__file__)) + "/files/"
 
@@ -36,12 +36,8 @@ def cfgPath(fname):
 def cfgPathSeq(fnames):
     return [cfgPath(fname) for fname in fnames]
 
-
-#===============================================
-sStdFMark = AnfisaConfig.configOption("filter.std.mark")
 def stdNm(name):
-    global sStdFMark
-    return sStdFMark + name
+    return StdNameSupport.stdNm(name)
 
 
 #===============================================
@@ -425,18 +421,18 @@ def setupGenericPack(app_config, base_pack):
     xbr_tab_schema.addField("Protein Change", "/_view/general/ppos_canonical")
     xbr_tab_schema.addField("Polyphen2_HVAR",
         "/_view/predictions/polyphen2_hvar",
-        view_tune.makeSeqColorTransform(view_tune.Polyphen_ColorCode))
+        prepareSeqColorTransform("Polyphen"))
     xbr_tab_schema.addField("Polyphen2_HDIV",
         "/_view/predictions/polyphen2_hdiv",
-        view_tune.makeSeqColorTransform(view_tune.Polyphen_ColorCode))
+        prepareSeqColorTransform("Polyphen"))
     xbr_tab_schema.addField("SIFT",
         "/_view/predictions/sift",
-        view_tune.makeSeqColorTransform(view_tune.SIFT_ColorCode))
+        prepareSeqColorTransform("SIFT"))
     xbr_tab_schema.addField("MUT TASTER",
         "/_view/predictions/mutation_taster",
-        view_tune.makeSeqColorTransform(view_tune.MutationTaster_ColorCode))
+        prepareSeqColorTransform("MutationTaster"))
     xbr_tab_schema.addField("FATHMM", "/_view/predictions/fathmm",
-        view_tune.makeSeqColorTransform(view_tune.FATHMM_ColorCode))
+        prepareSeqColorTransform("FATHMM"))
 
     xbr_tab_schema.addField("gnomAD_Overall_AF", "/_filters/gnomad_af_fam")
     xbr_tab_schema.addField("gnomAD_Overall_AF_Popmax",

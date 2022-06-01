@@ -47,6 +47,7 @@ def tuneAspects(ds_h, aspects):
     view_gnomad = aspects["view_gnomAD"]
 
     _resetupAttr(view_gen, UCSC_AttrH(view_gen))
+    _resetupAttr(view_gen, SymbolPanels_AttrH(view_gen, ds_h))
     attr_gnomad = _resetupAttr(view_gnomad, GnomAD_AttrH(view_gnomad))
     ds_h.regNamedAttr("gnomAD", attr_gnomad)
     attr_gtex = _resetupAttr(view_db, GTEx_AttrH(view_gen))
@@ -59,14 +60,11 @@ def tuneAspects(ds_h, aspects):
     _resetupAttr(view_db, PMID_AttrH(view_db))
     _resetupAttr(view_db, HGMD_PMID_AttrH(view_db))
     _resetupAttr(view_t,  UNIPROT_AttrH(view_t))
+    _resetupAttr(view_t, TrSymbolPanels_AttrH(view_t, ds_h))
     _resetupAttr(view_pkgb, PGKB_AttrH(view_pkgb, "diseases", True))
     _resetupAttr(view_pkgb, PGKB_AttrH(view_pkgb, "chemicals", True))
     _resetupAttr(view_pkgb, PGKB_AttrH(view_pkgb, "pmids", True))
     _resetupAttr(view_pkgb, PGKB_AttrH(view_pkgb, "notes", False))
-
-    ds_h.regNamedAttr("Samples", SamplesInfo_AttrH(ds_h))
-    ds_h.regNamedAttr("GeneColored", GeneColored_AttrH())
-    ds_h.regNamedAttr("ColorCode", ColorCode_AttrH())
 
     attr_igv = _resetupAttr(view_gen, IGV_AttrH(ds_h, view_gen))
     ds_h.regNamedAttr("IGV", attr_igv)
@@ -77,6 +75,10 @@ def tuneAspects(ds_h, aspects):
     if ds_h.getDSKind() == "ws":
         _resetupAttr(view_gen, view_op.OpFilters_AttrH(view_gen, ds_h))
         _resetupAttr(view_gen, view_op.OpDTrees_AttrH(view_gen, ds_h))
+
+    setupNamedAttr(ds_h, "Samples", evalSamplesInfo)
+    setupNamedAttr(ds_h, "GeneColored", evalGeneColored)
+    setupNamedAttr(ds_h, "ColorCode", evalColorCode)
 
 #===============================================
 def _resetupAttr(aspect_h, attr_h):
@@ -92,6 +94,43 @@ def _resetupAttr(aspect_h, attr_h):
     aspect_h.addAttr(attr_h, min(idx1, idx2)
         if min(idx1, idx2) >= 0 else max(idx1, idx2))
     return attr_h
+
+#===============================================
+class _AttributeProc:
+    def __init__(self, process_func):
+        self.mProcessFunc = process_func
+
+    def makeValue(self, rec_data):
+        return self.mProcessFunc(rec_data)
+
+def setupNamedAttr(ds_h, name, process_func):
+    ds_h.regNamedAttr(name, _AttributeProc(process_func))
+
+#===============================================
+class SymbolPanels_AttrH(AttrH):
+    def __init__(self, view, ds_h):
+        AttrH.__init__(self, "GENE_PANELS",
+            title = "Gene panels",
+            tooltip = "Gene panels positive on variant")
+        self.mDS = ds_h
+        self.setAspect(view)
+
+    def htmlRepr(self, obj, v_context):
+        genes = obj["genes"]
+        return (' '.join(self.mDS.symbolsToPanels("Symbol", genes)), "norm")
+
+#===============================================
+class TrSymbolPanels_AttrH(AttrH):
+    def __init__(self, view, ds_h):
+        AttrH.__init__(self, "TR_GENE_PANELS",
+            title = "Gene panels",
+            tooltip = "Gene panels positive on transcript variant")
+        self.mDS = ds_h
+        self.setAspect(view)
+
+    def htmlRepr(self, obj, v_context):
+        genes = [obj.get("gene")]
+        return (' '.join(self.mDS.symbolsToPanels("Symbol", genes)), "norm")
 
 #===============================================
 class UCSC_AttrH(AttrH):
@@ -553,83 +592,29 @@ class PGKB_AttrH(AttrH):
         return (html, "norm")
 
 #===============================================
-class SamplesInfo_AttrH:
-    def __init__(self, ds_h):
-        self.mDS = ds_h
-
-    def makeValue(self, rec_data):
-        ret = dict()
-        for smp_info in rec_data["_view"]["quality_samples"][1:]:
-            smp_id = smp_info["title"].split(':')[-1].strip()
-            ret[smp_id] = {
-                "genotype":  smp_info.get("genotype"),
-                "g_quality": smp_info.get("genotype_quality")}
-        return ret
+def evalSamplesInfo(rec_data):
+    ret = dict()
+    for smp_info in rec_data["_view"]["quality_samples"][1:]:
+        smp_id = smp_info["title"].split(':')[-1].strip()
+        ret[smp_id] = {
+            "genotype":  smp_info.get("genotype"),
+            "g_quality": smp_info.get("genotype_quality")}
+    return ret
 
 #===============================================
-class GeneColored_AttrH:
-    def __init__(self):
-        pass
+def evalGeneColored(rec_data):
+    genes = rec_data["_view"]["general"]["genes"]
+    pli = rec_data["_view"]["gnomAD"].get("pLI")
 
-    def makeValue(self, rec_data):
-        genes = rec_data["_view"]["general"]["genes"]
-        pli = rec_data["_view"]["gnomAD"].get("pLI")
+    pli_value = pli[0] if (pli and len(pli) == 1 and pli[0]) else 0
+    color_code = (30 if pli_value >= 0.9 else
+        (20 if pli_value >= 0.5 else 10))
 
-        pli_value = pli[0] if (pli and len(pli) == 1 and pli[0]) else 0
-        color_code = (30 if pli_value >= 0.9 else
-            (20 if pli_value >= 0.5 else 10))
-
-        return [genes, color_code]
+    return [genes, color_code]
 
 #===============================================
-class ColorCode_AttrH:
-    def __init__(self):
-        pass
-
-    def makeValue(self, rec_data):
-        return AnfisaConfig.normalizeColorCode(
-            rec_data["__data"].get("color_code"))
+def evalColorCode(rec_data):
+    return AnfisaConfig.normalizeColorCode(
+        rec_data["__data"].get("color_code"))
 
 #===============================================
-def Polyphen_ColorCode(value):
-    return {
-        "benign": 10,
-        "possibly_damaging": 20,
-        "probably_damaging": 20,
-        "damaging": 30,
-        "B": 10,
-        "P": 20,
-        "D": 30}.get(value, -1)
-
-def SIFT_ColorCode(value):
-    return {
-        "tolerated": 10,
-        "deleterious": 30,
-        "T": 10,
-        "D": 30}.get(value, -1)
-
-def MutationTaster_ColorCode(value):
-    return {
-        "P": 10,
-        "N": 10,
-        "D": 30,
-        "A": 30}.get(value, -1)
-
-def MutationAssessor_ColorCode(value):
-    return {
-        "L": 10,
-        "N": 10,
-        "M": 30,
-        "H": 30}.get(value, -1)
-
-def FATHMM_ColorCode(value):
-    return {
-        "T": 10,
-        "D": 30}.get(value, -1)
-
-def makeSeqColorTransform(color_func):
-    def transform_func(seq_data):
-        if not seq_data:
-            return seq_data
-        return [[value, color_func(value)] for value in seq_data]
-    return transform_func

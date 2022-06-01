@@ -28,7 +28,7 @@ from app.model.dataset import DataSet
 
 from .rules import RulesUnit
 from .tags_man import TagsManager
-from .zone import FilterZoneH
+from .zone import FilterZoneH, PanelZoneH
 from .ws_unit import loadWS_Unit
 from .ws_space import WS_EvalSpace
 from .ws_io import exportWS
@@ -64,37 +64,37 @@ class Workspace(DataSet):
                     transcript_id_unit = unit_h.getName()
         self._loadPData()
         self._loadFData()
-        self.mTagsMan = TagsManager(self,
-            self.getPanelList("Check-Tags", "_tags"))
         self.mRulesUnit = RulesUnit(self)
         self.mEvalSpace._insertUnit(self.mRulesUnit, insert_idx = 0)
         if not transcript_id_unit:
             transcript_id_unit = AnfisaConfig.configOption("ws.transcript.id")
         self.mEvalSpace._setupTrIdUnit(transcript_id_unit)
+        self.mTagsMan = None
         self.startService()
 
+        self.mTagsMan = TagsManager(self, "Check-Tags")
         self.mZoneHandlers  = []
         for zone_it in self.iterStdItems("zone"):
             unit_name = zone_it.getData()
-            if (unit_name == "_tags"):
+            if unit_name == "_tags":
                 zone_h = self.mTagsMan
                 zone_h._setTitle(zone_it.getName())
             else:
                 unit_h = self.mEvalSpace.getUnit(unit_name)
                 if (not unit_h):
                     continue
-                zone_h = FilterZoneH(self, zone_it.getName(), unit_h)
+                if (unit_h.getMean() == "panel"
+                        # temporary work around
+                        and not unit_h.getDescr().get("view-path")):
+                    zone_h = PanelZoneH(self, zone_it.getName(), unit_h)
+                else:
+                    zone_h = FilterZoneH(self, zone_it.getName(), unit_h)
             self.mZoneHandlers.append(zone_h)
 
         for filter_h in self.iterSolEntries("filter"):
             filter_h.activate()
         for dtree_h in self.iterSolEntries("dtree"):
             dtree_h.activate()
-
-        # Temporary hack
-        symbol_unit = self.mEvalSpace.getUnit("Symbol")
-        if symbol_unit is not None:
-            symbol_unit.mInfo["render-mode"] = "tree-map"
 
     @staticmethod
     def _makeRecArrayFunc(val_array):
@@ -221,7 +221,7 @@ class Workspace(DataSet):
             "total-counts": self.mEvalSpace.getTotalCounts(),
             "filtered-counts": condition.getCounts(zone_fseq),
             "records": records}
-        self.visitCondition(condition, ret_handle)
+        self.visitEvaluation(filter_h, ret_handle)
         return ret_handle
 
     #===============================================

@@ -45,13 +45,13 @@ class SecondaryWsCreation(ExecutionTask):
     def getTaskType(self):
         return "sec-ws"
 
-    sID_Pattern = re.compile('^\\S+$', re.U)
+    sDSNamePattern = re.compile(r'^\S+$', re.U)
 
     @classmethod
     def correctWSName(cls, name):
         if len(name) > AnfisaConfig.configOption("ds.name.max.length"):
             return False
-        if not cls.sID_Pattern.match(name):
+        if not cls.sDSNamePattern.match(name):
             return False
         return name[0].isalpha and not name.lower().startswith("xl_")
 
@@ -94,6 +94,24 @@ class SecondaryWsCreation(ExecutionTask):
             rec_no_seq, point_seq = self.mEval.collectRecSeq()
             receipt["p-presentation"] = point_seq
             receipt["dtree-code"] = self.mEval.getCode()
+
+        panels_cfg = AnfisaConfig.configOption("panels.setup")
+        panels_supply = dict()
+        for ptype in sorted(panels_cfg.keys()):
+            pnames = self.mDS.getEvalSpace().getUsedDimValues(
+                self.mEval, "panel." + ptype)
+            if len(pnames) == 0:
+                continue
+            panel_descr = dict()
+            for pname in pnames:
+                p_h = self.mDS.pickSolEntry("panel." + ptype, pname)
+                if p_h.isDynamic():
+                    panel_descr[p_h.getName()] = p_h.getSymList()
+            if len(panel_descr) > 0:
+                panels_supply[ptype] = panel_descr
+        if len(panels_supply) > 0:
+            receipt["panels-supply"] = panels_supply
+
         receipt["eval-update-info"] = self.mEval.getUpdateInfo()
 
         rec_no_seq = sorted(rec_no_seq)

@@ -12,7 +12,7 @@ Requests
    :doc:`job_status`        Job status
    :doc:`adm_update`        Force vault state update
    :doc:`adm_reload_ds`     Force dataset reload
-   :doc:`import_ws`         Create workspace by archive file
+   :doc:`adm_drop_ds`       Drop dataset 
   ------------------------- ------------------------------------------------------------- 
   \ 
   *Dataset level*
@@ -44,6 +44,13 @@ Requests
    :doc:`export`            Export operation in Excel format
    :doc:`ds2ws`             Creation of secondary workspace
    :doc:`export_ws`         Export workspace as archive
+   :doc:`import_ws`         Create workspace by archive file
+  ------------------------- -------------------------------------------------------------
+  \
+  *Variety support*
+   :doc:`panels`            Panels information and manipulation
+   :doc:`symbols`           Symbol selection
+   :doc:`symbol_info`       Information on symbol
   ------------------------- -------------------------------------------------------------
   \ 
   *WS-dataset support*
@@ -63,6 +70,7 @@ Requests
    job_status
    adm_update
    adm_reload_ds
+   adm_drop_ds
 
    dsinfo 
    ds_list
@@ -87,6 +95,10 @@ Requests
    ds2ws
    import_ws
    export_ws
+   
+   panels
+   symbols
+   symbol_info
    
    ws_list
    zone_list
@@ -113,6 +125,7 @@ Structures
    s_zone
    s_tags
    s_histogram
+   s_stat_ctx
 
 References
 ----------

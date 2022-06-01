@@ -18,6 +18,7 @@
 #  limitations under the License.
 #
 import abc, json
+from .visitor import EnumUnitConditionVisitor
 
 #===============================================
 class Evaluation:
@@ -85,6 +86,10 @@ class Evaluation:
     def getActiveUnitSet(self):
         assert False
 
+    @abc.abstractmethod
+    def visitAll(self, visitor):
+        assert False
+
     def operationError(self, cond_data, err_msg):
         if self.mEvalStatus == "ok":
             self.mEvalStatus = "runtime"
@@ -126,6 +131,8 @@ class Evaluation:
             assert len(cond_data) == 1, (
                 "Bad None condition: " + json.dumps(cond_data))
             return self.mEvalSpace.getCondNone()
+        if cond_data[0] == "error":
+            return self.buildCondition(cond_data[1])
         if cond_data[0] in {"and", "or"}:
             seq = []
             for cc in cond_data[1:]:
@@ -164,3 +171,8 @@ class Evaluation:
                 self.pointError(err_msg)
                 return None
         return unit_h.buildCondition(cond_data, self)
+
+    def getUsedEnumValues(self, unit_name):
+        visitor = EnumUnitConditionVisitor(unit_name)
+        self.visitAll(visitor)
+        return visitor.makeResult()

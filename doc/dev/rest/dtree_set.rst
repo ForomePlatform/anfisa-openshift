@@ -20,9 +20,12 @@ Synopsis
 
         **code**: *optional* code of applying decision tree 
         
+        **actsym**: *optional*, add gene symbols from filter to :ref:`active symbols<actsym_purpose>` , 
+            *recommended in form* ``actsym=1``
+
         **instr**: *optional modifier* :doc:`s_dtree_instr`
                    *in JSON string representation*
-        
+
     **Return value**: 
     
     | ``{`` *dictionary*
@@ -59,6 +62,7 @@ Synopsis
     |      **hash**: hash code associated with current tree code, *string*
     |      **dtree-list**: names of all decision trees available for dataset
     |           ``[`` *list of* :doc:`s_sol_entry` ``]``
+    |      **dtree-sol-version**: :ref:`indicator of state<sol_version_indicators>` for decision trees
     |      **rq_id**": unique request id, for use in secondary requests, *string*
     |  ``}``
     
@@ -99,6 +103,9 @@ Returning properties:
 Comments
 --------
 The request is partial analogue to :doc:`ds_stat`. Both methods are principal for support main :ref:`work pages<work_pages>` for two mechanisms of :term:`filtration` in the system.
+
+Inside instruction atom can be in an improper state, and there is error message in **err-atoms** for this case, and the Front End needs to show them. In some cases (usually if property name is not supported in dataset, or has improper type) the atom can be blocked. Only deletion of such atom is a proper operation. For blocked atoms the correspondent coindition in **cond-atoms** starts (leading element of top list) with ``"error"`` instruction, see 
+details :ref:`here<error_condition>`.
 
 See also
 --------

@@ -10,12 +10,12 @@ data:
         "host": "0.0.0.0",
         "port": 3041,
         "html-base": "/app",
-        "html-title": "Anfisa v7/Docker",
+        "html-title": "Anfisa v7 in Docker",
         "data-vault": "${WORK}/vault",
         "run-options": [],
         "run-modes": [],
         "job-vault-check-period": 30,
-        "igv-dir": "${HOME}/igv.dir",
+        "igv-dir": "/anfisa/anfisa/igv.dir",
         "--solutions": {
             "panels": {
                 "Symbol": {
@@ -57,17 +57,18 @@ data:
         "doc-report-css": "${HOME}/int_ui/files/report.css",
         "doc-pygments-css": "${HOME}/int_ui/files/py_pygments.css",
         "druid": {
-            "vault-prefix": "demo_v6",
+            "vault-prefix": "anfisa_v7",
             "index": "http://anfisa-druid-coordinator:8081/druid/indexer/v1/task",
             "query": "http://router:80/druid/v2",
             "sql":   "http://router:80/druid/v2/sql",
             "coord": "http://anfisa-druid-coordinator:8081/druid/coordinator/v1",
             "copydir": "/data/anfisa"
         },
-        
+
         "mongo-host": "anfisa-mongodb",
         "mongo-port": 27017,
         "mongo-db": "Anfisa1",
+        "auto-drop-datasets": ["(?i)test"],
         "logging": {
             "version": 1,
             "disable_existing_loggers": false,

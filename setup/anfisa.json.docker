@@ -61,6 +61,7 @@
     "mongo-host": "anfisa-mongodb",
     "mongo-port": 27017,
     "mongo-db": "Anfisa1",
+    "auto-drop-datasets": ["(?i)test"],
     "logging": {
         "version": 1,
         "disable_existing_loggers": false,

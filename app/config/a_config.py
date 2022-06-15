@@ -26,7 +26,7 @@ from forome_tools.path_works import AttrFuncHelper
 #===============================================
 class AnfisaConfig:
     sTextMessages = {
-        "aspect.tags.title": "Tags"}
+        "aspect.tags.title": "Tags&nbsp;&amp;<br/>Filters"}
 
     sConfigOptions = {
         "aspect.tags.name": "tags_data",
@@ -54,7 +54,8 @@ class AnfisaConfig:
         "export.max.count": 9000,
         "max.tab.rq.size": 9000,  # 50,
 
-        "solution.std.mark": '@',
+        "solution.std.mark": u"\u23da",
+        "solution.dyn.mark": u"\u2692",
         "code.error.mark": u"\u26a0",
 
         "rules.setup": {

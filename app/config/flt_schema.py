@@ -109,16 +109,16 @@ def is_none(value):
 FilterPrepareSetH.regNamedFunction("has_variant", sample_has_variant)
 FilterPrepareSetH.regNamedFunction("is_none", is_none)
 #===============================================
-def defineFilterSchema(metadata_record, ds_kind, derived_mode = False):
+def defineFilterSchema(metadata_record, ds_kind, druid_adm = None):
     data_schema = metadata_record.get("data_schema")
     if data_schema == "FAVOR":
-        return FavorSchema.defineFilterSchema(metadata_record,
-            ds_kind, derived_mode)
+        return FavorSchema.defineFilterSchema(
+            metadata_record, ds_kind, druid_adm)
     assert data_schema is None or data_schema == "CASE", (
         "Bad data schema: " + data_schema)
 
-    filters = FilterPrepareSetH(metadata_record, anfisaVariables,
-        ds_kind, derived_mode = derived_mode)
+    filters = FilterPrepareSetH(metadata_record, anfisaVariables, ds_kind,
+        druid_adm = druid_adm if ds_kind != "ws" else None)
 
     cohorts = metadata_record.get("cohorts")
     with filters.viewGroup("Inheritance"):
@@ -169,12 +169,12 @@ def defineFilterSchema(metadata_record, ds_kind, derived_mode = False):
 
     with filters.viewGroup("Genes"):
         if sAdvanceMode:
-            filters.varietyUnit("_Symbol", "Symbol", "Panels",
+            filters.varietyUnit("_Symbol", "Symbol", "Gene_Lists",
                 "/_view/general/genes[]", "Symbol")
         else:
             genes_unit = filters.multiStatusUnit("Symbol",
                 "/_view/general/genes[]", compact_mode = True)
-            filters.panelsUnit("Panels", genes_unit, "Symbol",
+            filters.panelsUnit("Gene_Lists", genes_unit, "Symbol",
                 view_path = "/_view/general/gene_panels")
 
         filters.multiStatusUnit("EQTL_Gene", "/_filters/eqtl_gene[]",
@@ -203,12 +203,12 @@ def defineFilterSchema(metadata_record, ds_kind, derived_mode = False):
 
         if sAdvanceMode:
             filters.transcriptVarietyUnit("Transcript_Gene",
-                "Transcript_Gene_Panels", "gene", "Symbol",
+                "Transcript_Gene_Lists", "gene", "Symbol",
                 default_value = "undefined")
         else:
             tr_genes_unit = filters.transcriptStatusUnit("Transctript_Gene",
                 "gene", default_value = "undefined")
-            filters.transcriptPanelsUnit("Transcript_Gene_Panels",
+            filters.transcriptPanelsUnit("Transcript_Gene_Lists",
                 tr_genes_unit, "Symbol", view_name = "tr_gene_panels")
 
         filters.transcriptStatusUnit("Transcript_source", "transcript_source",
